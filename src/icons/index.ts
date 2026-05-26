@@ -1,0 +1,13 @@
+export { default as BellIcon } from './BellIcon';
+export { default as SearchIcon } from './SearchIcon';
+export { default as ChartIcon } from './ChartIcon';
+export { default as CupIcon } from './CupIcon';
+export { default as MedalIcon } from './MedalIcon';
+export { default as PlayIcon } from './PlayIcon';
+export { default as ClockIcon } from './ClockIcon';
+export { default as HomeIcon } from './HomeIcon';
+export { default as LearnIcon } from './LearnIcon';
+export { default as ExamIcon } from './ExamIcon';
+export { default as ProfileIcon } from './ProfileIcon';
+export { default as Icon } from './Icon';
+export type { IconName } from './Icon';

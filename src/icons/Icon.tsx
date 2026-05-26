@@ -1,0 +1,68 @@
+import React from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
+import BellIcon from './BellIcon';
+import SearchIcon from './SearchIcon';
+import ChartIcon from './ChartIcon';
+import CupIcon from './CupIcon';
+import MedalIcon from './MedalIcon';
+import PlayIcon from './PlayIcon';
+import ClockIcon from './ClockIcon';
+import HomeIcon from './HomeIcon';
+import LearnIcon from './LearnIcon';
+import ExamIcon from './ExamIcon';
+import ProfileIcon from './ProfileIcon';
+
+export type IconName =
+  | 'Bell'
+  | 'Search'
+  | 'Chart'
+  | 'Cup'
+  | 'Medal'
+  | 'Play'
+  | 'Clock'
+  | 'Home'
+  | 'Learn'
+  | 'Exam'
+  | 'Profile';
+
+interface IconProps {
+  name: IconName;
+  color?: string;
+  size?: number;
+  style?: StyleProp<ViewStyle>;
+  opacity?: number;
+}
+
+interface BaseIconProps {
+  color?: string;
+  size?: number;
+  style?: StyleProp<ViewStyle>;
+  opacity?: number;
+}
+
+const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
+  Bell: BellIcon,
+  Search: SearchIcon,
+  Chart: ChartIcon,
+  Cup: CupIcon,
+  Medal: MedalIcon,
+  Play: PlayIcon,
+  Clock: ClockIcon,
+  Home: HomeIcon,
+  Learn: LearnIcon,
+  Exam: ExamIcon,
+  Profile: ProfileIcon,
+};
+
+const Icon = ({ name, color, size, style, opacity }: IconProps) => {
+  const IconComponent = IconMap[name];
+
+  if (!IconComponent) {
+    console.warn(`Icon "${name}" not found`);
+    return null;
+  }
+
+  return <IconComponent color={color} size={size} style={style} opacity={opacity} />;
+};
+
+export default Icon;
