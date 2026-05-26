@@ -5,6 +5,7 @@ export { default as CupIcon } from './CupIcon';
 export { default as MedalIcon } from './MedalIcon';
 export { default as PlayIcon } from './PlayIcon';
 export { default as ClockIcon } from './ClockIcon';
+export { default as CollectionIcon } from './CollectionIcon';
 export { default as HomeIcon } from './HomeIcon';
 export { default as LearnIcon } from './LearnIcon';
 export { default as ExamIcon } from './ExamIcon';

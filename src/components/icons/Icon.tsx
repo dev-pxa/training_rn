@@ -7,6 +7,7 @@ import CupIcon from './CupIcon';
 import MedalIcon from './MedalIcon';
 import PlayIcon from './PlayIcon';
 import ClockIcon from './ClockIcon';
+import CollectionIcon from './CollectionIcon';
 import HomeIcon from './HomeIcon';
 import LearnIcon from './LearnIcon';
 import ExamIcon from './ExamIcon';
@@ -20,6 +21,7 @@ export type IconName =
   | 'Medal'
   | 'Play'
   | 'Clock'
+  | 'Collection'
   | 'Home'
   | 'Learn'
   | 'Exam'
@@ -48,6 +50,7 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Medal: MedalIcon,
   Play: PlayIcon,
   Clock: ClockIcon,
+  Collection: CollectionIcon,
   Home: HomeIcon,
   Learn: LearnIcon,
   Exam: ExamIcon,

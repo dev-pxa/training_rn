@@ -1,3 +1,6 @@
+/** 课程类型：micro(微课程) / series(系列课程) */
+export type CourseType = 'micro' | 'series';
+
 export interface CarouselItem {
   /** 轮播项ID */
   id: string;
@@ -54,7 +57,9 @@ export interface Course {
   title: string;
   /** 封面图URL */
   coverImage: string;
-  /** 课程时长 */
+  /** 课程类型：micro(微课程) / series(系列课程) */
+  type: CourseType;
+  /** 课程时长/课时数 */
   duration: string;
   /** 标签文本 */
   label?: string;

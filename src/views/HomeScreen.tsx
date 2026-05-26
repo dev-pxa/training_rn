@@ -13,9 +13,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import Carousel from '../components/Carousel';
 import BottomTabBar, { TabItem } from '../components/BottomTabBar';
+import CourseCard from '../components/CourseCard';
 import { fetchHomeData } from '../services/api';
-import { HomeResponse, CourseModule, Course } from '../types/home';
+import { HomeResponse, CourseModule } from '../types/home';
 import { RootStackParamList } from '../types/navigation';
+import { Icon } from '../components/Icons';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
@@ -121,34 +123,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     );
   };
 
-  /** 渲染单个课程卡片 */
-  const renderCourseCard = (course: Course) => (
-    <View
-      key={course.id}
-      style={styles.courseCard}
-      onTouchEnd={() => handleCoursePress(course.jumpUrl)}
-    >
-      <View style={styles.courseThumbnailContainer}>
-        <Image
-          source={{ uri: course.coverImage }}
-          style={styles.courseThumbnail}
-        />
-        {course.label && course.labelStyle && (
-          <View style={[styles.courseBadge, { backgroundColor: course.labelStyle.backgroundColor }]}>
-            <Text style={[styles.courseBadgeText, { color: course.labelStyle.textColor }]}>
-              {course.label}
-            </Text>
-          </View>
-        )}
-      </View>
-      <Text style={styles.courseCardTitle} numberOfLines={2}>{course.title}</Text>
-      <View style={styles.courseDuration}>
-        <View style={styles.clockIcon} />
-        <Text style={styles.courseDurationText}>{course.duration}</Text>
-      </View>
-    </View>
-  );
-
   /** 渲染课程模块 */
   const renderCourseModule = (module: CourseModule) => (
     <View key={module.moduleType} style={styles.section}>
@@ -159,7 +133,13 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         </View>
       </View>
       <View style={styles.courseGrid}>
-        {module.courses.map(renderCourseCard)}
+        {module.courses.map((course) => (
+          <CourseCard
+            key={course.id}
+            course={course}
+            onPress={handleCoursePress}
+          />
+        ))}
       </View>
     </View>
   );
@@ -218,7 +198,20 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
+      {/* 顶部导航 */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.welcomeText}>欢迎回来,</Text>
+          <View style={styles.userRow}>
+            <Text style={styles.userName}>张小智</Text>
+          </View>
+        </View>
+        {/* TODO 通知功能暂时先留着，二期做 */}
+        <View style={styles.notificationIcon}>
+          <Icon name="Bell" />
+          <View style={styles.notificationDot} />
+        </View>
+      </View>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* 轮播图组件 */}
         <Carousel
@@ -246,6 +239,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8FAFC',
+  },
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 48,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  welcomeText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+  },
+  userRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#1F2937',
+  },
+  notificationIcon: {
+    position: 'relative',
+  },
+  notificationDot: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 8,
+    height: 8,
+    backgroundColor: '#EF4444',
+    borderRadius: 9999,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   loadingContainer: {
     flex: 1,
@@ -375,55 +406,6 @@ const styles = StyleSheet.create({
   courseGrid: {
     flexDirection: 'row',
     gap: 12,
-  },
-  courseCard: {
-    flex: 1,
-  },
-  courseThumbnailContainer: {
-    aspectRatio: 16 / 9,
-    backgroundColor: '#EEF2FF',
-    borderRadius: 12,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  courseThumbnail: {
-    width: '100%',
-    height: '100%',
-  },
-  courseBadge: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  courseBadgeText: {
-    fontSize: 8,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-  },
-  courseCardTitle: {
-    marginTop: 8,
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#1F2937',
-    lineHeight: 16,
-  },
-  courseDuration: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  clockIcon: {
-    width: 14,
-    height: 14,
-    backgroundColor: '#9CA3AF',
-  },
-  courseDurationText: {
-    fontSize: 9,
-    color: '#9CA3AF',
-    marginLeft: 2,
   },
 });
 

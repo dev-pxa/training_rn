@@ -55,6 +55,7 @@ export const mockHomeData: HomeResponse = {
             id: 'course_002',
             title: '工业级网关部署规范',
             coverImage: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
+            type: 'micro',
             duration: '45分钟',
             label: '热门',
             labelStyle: {
@@ -67,7 +68,8 @@ export const mockHomeData: HomeResponse = {
             id: 'course_003',
             title: '云端协同方案实操视频',
             coverImage: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
-            duration: '32分钟',
+            type: 'series',
+            duration: '5课时',
             label: '新上线',
             labelStyle: {
               backgroundColor: '#059669',
@@ -86,6 +88,7 @@ export const mockHomeData: HomeResponse = {
             id: 'course_004',
             title: '工业级网关部署规范',
             coverImage: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
+            type: 'micro',
             duration: '45分钟',
             label: '热门',
             labelStyle: {
@@ -98,7 +101,8 @@ export const mockHomeData: HomeResponse = {
             id: 'course_005',
             title: '云端协同方案实操视频',
             coverImage: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
-            duration: '32分钟',
+            type: 'series',
+            duration: '5课时',
             label: '新上线',
             labelStyle: {
               backgroundColor: '#059669',
@@ -148,7 +152,6 @@ export const mockLoginConfig: LoginConfigResponse = {
 
 五、协议修改
 我们有权根据需要修改本协议，修改后的协议一经公布即生效。
-
       `.trim(),
     },
     privacyPolicy: {
