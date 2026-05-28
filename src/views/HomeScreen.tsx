@@ -78,7 +78,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   /** 点击 Tab 处理 */
   const handleTabPress = (tabKey: string) => {
     console.log('切换 Tab:', tabKey);
-    navigation.navigate(tabKey);
+    if (tabKey === 'profile') {
+      navigation.navigate('Profile');
+    }
   };
 
   /** 渲染继续学习模块 */

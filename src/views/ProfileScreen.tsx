@@ -111,7 +111,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               />
               <View style={styles.userDetails}>
                 <Text style={styles.userName}>张小智</Text>
-                <Text style={styles.userDept}>智能家居事业部 · 华东区</Text>
+                {/* TODO 一期不做，二期做，代码保留 */}
+                {/* <Text style={styles.userDept}>智能家居事业部 · 华东区</Text> */}
               </View>
             </View>
             <TouchableOpacity style={styles.editButton}>
@@ -143,7 +144,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
         {/* 学习历史 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>最近学习记录</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>最近学习记录</Text>
+            <TouchableOpacity>
+              <Text style={styles.sectionLink}>查看全部</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.learningHistoryContainer}>
             {LEARNING_HISTORY.map(renderLearningRecord)}
           </View>
@@ -226,7 +232,7 @@ const styles = StyleSheet.create({
   },
   editButton: {
     position: 'absolute',
-    top: 16,
+    top: 32,
     right: 24,
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -280,11 +286,20 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 24,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
   sectionTitle: {
     fontSize: 14,
     fontWeight: '700',
     color: '#1F2937',
-    marginBottom: 12,
+  },
+  sectionLink: {
+    fontSize: 12,
+    color: '#2563EB',
   },
   learningHistoryContainer: {
     backgroundColor: '#FFFFFF',
