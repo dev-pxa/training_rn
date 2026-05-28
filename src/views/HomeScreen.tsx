@@ -29,13 +29,13 @@ interface HomeScreenProps {
 
 /** 底部 Tab 配置 */
 const HOME_TABS: TabItem[] = [
-  { key: 'home', label: '首页', iconName: 'Home' },
-  { key: 'learn', label: '学习', iconName: 'Learn' },
-  { key: 'exam', label: '考试', iconName: 'Exam' },
-  { key: 'profile', label: '我的', iconName: 'Profile' },
+  { key: 'Home', label: '首页', iconName: 'Home' },
+  { key: 'Learn', label: '学习', iconName: 'Learn' },
+  { key: 'Exam', label: '考试', iconName: 'Exam' },
+  { key: 'Profile', label: '我的', iconName: 'Profile' },
 ];
 
-const HomeScreen: React.FC<HomeScreenProps> = () => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   /** 加载状态 */
   const [loading, setLoading] = useState(true);
   /** 错误信息 */
@@ -78,6 +78,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   /** 点击 Tab 处理 */
   const handleTabPress = (tabKey: string) => {
     console.log('切换 Tab:', tabKey);
+    navigation.navigate(tabKey);
   };
 
   /** 渲染继续学习模块 */
@@ -230,7 +231,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       </ScrollView>
 
       {/* 底部导航栏 */}
-      <BottomTabBar tabs={tabsWithHandlers} activeKey="home" />
+      <BottomTabBar tabs={tabsWithHandlers} activeKey="Home" />
     </SafeAreaView>
   );
 };

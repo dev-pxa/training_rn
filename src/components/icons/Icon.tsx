@@ -12,6 +12,15 @@ import HomeIcon from './HomeIcon';
 import LearnIcon from './LearnIcon';
 import ExamIcon from './ExamIcon';
 import ProfileIcon from './ProfileIcon';
+import CrownIcon from './CrownIcon';
+import StarIcon from './StarIcon';
+import CheckCircleIcon from './CheckCircleIcon';
+import PlayCircleIcon from './PlayCircleIcon';
+import ReorderIcon from './ReorderIcon';
+import SettingsIcon from './SettingsIcon';
+import CloudDownloadIcon from './CloudDownloadIcon';
+import ArrowRightIcon from './ArrowRightIcon';
+import VerifiedCheckIcon from './VerifiedCheckIcon';
 
 export type IconName =
   | 'Bell'
@@ -25,7 +34,16 @@ export type IconName =
   | 'Home'
   | 'Learn'
   | 'Exam'
-  | 'Profile';
+  | 'Profile'
+  | 'Crown'
+  | 'Star'
+  | 'CheckCircle'
+  | 'PlayCircle'
+  | 'Reorder'
+  | 'Settings'
+  | 'CloudDownload'
+  | 'ArrowRight'
+  | 'VerifiedCheck';
 
 interface IconProps {
   name: IconName;
@@ -55,6 +73,15 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Learn: LearnIcon,
   Exam: ExamIcon,
   Profile: ProfileIcon,
+  Crown: CrownIcon,
+  Star: StarIcon,
+  CheckCircle: CheckCircleIcon,
+  PlayCircle: PlayCircleIcon,
+  Reorder: ReorderIcon,
+  Settings: SettingsIcon,
+  CloudDownload: CloudDownloadIcon,
+  ArrowRight: ArrowRightIcon,
+  VerifiedCheck: VerifiedCheckIcon,
 };
 
 const Icon = ({ name, color, size, style, opacity }: IconProps) => {
