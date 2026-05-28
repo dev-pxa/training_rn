@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>企业培训APP - 个人中心</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+        body { background-color: #f8fafc; font-family: 'PingFang SC', sans-serif; }
+        .app-container { width: 375px; height: 812px; margin: 20px auto; background: white; border-radius: 40px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 8px solid #1a1a1a; display: flex; flex-direction: column; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+<!-- 1. 用户信息头部 Section -->
+<div class="px-6 pt-16 pb-8 bg-gradient-to-b from-blue-50 to-white">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="User Avatar" class="w-20 h-20 rounded-3xl object-cover border-4 border-white shadow-xl" src="https://modao.cc/agent-py/media/generated_images/2026-03-08/066a0b30f67b4d83ab5198333a5c7349.jpg"/>
+<div class="absolute -bottom-1 -right-1 bg-blue-600 text-white p-1.5 rounded-xl border-2 border-white">
+<span class="iconify text-sm" data-icon="solar:verified-check-bold"></span>
+</div>
+</div>
+<div>
+<h2 class="text-xl font-black text-gray-800">张小智</h2>
+<p class="text-xs text-blue-600 font-bold mt-1">智能家居事业部 · 华东区</p>
+<div class="mt-2 flex gap-1">
+<span class="text-[9px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold uppercase">Lvl 8</span>
+<span class="text-[9px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full font-bold uppercase">黄金导师</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto hide-scrollbar px-6 space-y-8 pb-24">
+<!-- 2. 荣誉墙/证书 Section -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-bold text-gray-800">技能荣誉勋章</h4>
+<span class="text-xs text-blue-600">全部 (12)</span>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar py-2">
+<div class="w-16 flex-shrink-0 text-center space-y-2">
+<div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center text-amber-500 shadow-inner">
+<span class="iconify text-3xl" data-icon="solar:medal-ribbon-bold-duotone"></span>
+</div>
+<p class="text-[9px] font-bold text-gray-600">初级认证</p>
+</div>
+<div class="w-16 flex-shrink-0 text-center space-y-2">
+<div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 shadow-inner">
+<span class="iconify text-3xl" data-icon="solar:crown-minimalistic-bold-duotone"></span>
+</div>
+<p class="text-[9px] font-bold text-gray-600">效率达人</p>
+</div>
+<div class="w-16 flex-shrink-0 text-center space-y-2">
+<div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 shadow-inner">
+<span class="iconify text-3xl" data-icon="solar:re-order-bold-duotone"></span>
+</div>
+<p class="text-[9px] font-bold text-gray-600">全能工匠</p>
+</div>
+<div class="w-16 flex-shrink-0 text-center space-y-2 opacity-30 grayscale">
+<div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-400">
+<span class="iconify text-3xl" data-icon="solar:star-bold"></span>
+</div>
+<p class="text-[9px] font-bold text-gray-400">神秘奖励</p>
+</div>
+</div>
+</div>
+<!-- 3. 数据仪表盘 Section -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-gray-50 p-4 rounded-3xl">
+<p class="text-[10px] text-gray-400 font-bold mb-1">本月学时</p>
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-black text-gray-800">24.5</span>
+<span class="text-[10px] text-gray-400 font-normal">小时</span>
+</div>
+</div>
+<div class="bg-gray-50 p-4 rounded-3xl">
+<p class="text-[10px] text-gray-400 font-bold mb-1">击败同事</p>
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-black text-blue-600">92</span>
+<span class="text-[10px] text-gray-400 font-normal">%</span>
+</div>
+</div>
+</div>
+<!-- 4. 学习历史 Section -->
+<div>
+<h4 class="font-bold text-gray-800 mb-4">最近学习记录</h4>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0">
+<img alt="Course" class="w-full h-full object-cover" src="https://modao.cc/agent-py/media/generated_images/2026-03-08/b21bbe6734a344b48f4dd3285a82ce76.jpg"/>
+</div>
+<div class="flex-1">
+<h6 class="text-xs font-bold text-gray-800">网关与子系统联动实操培训</h6>
+<p class="text-[9px] text-gray-400 mt-1">学习于 2026-03-07 · 100% 完成</p>
+</div>
+<span class="iconify text-blue-500" data-icon="solar:check-circle-bold"></span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0">
+<img alt="Course" class="w-full h-full object-cover" src="https://modao.cc/agent-py/media/generated_images/2026-03-08/b21bbe6734a344b48f4dd3285a82ce76.jpg"/>
+</div>
+<div class="flex-1">
+<h6 class="text-xs font-bold text-gray-800">2026新品发布会：智慧客厅系列</h6>
+<p class="text-[9px] text-gray-400 mt-1">学习于 2026-03-05 · 45% 完成</p>
+</div>
+<span class="iconify text-yellow-500" data-icon="solar:play-circle-bold"></span>
+</div>
+</div>
+</div>
+<!-- 5. 设置入口 Section -->
+<div class="space-y-2">
+<div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+<div class="flex items-center gap-3">
+<span class="iconify text-blue-600" data-icon="solar:settings-bold"></span>
+<span class="text-xs font-bold text-gray-700">系统设置与隐私</span>
+</div>
+<span class="iconify text-gray-300" data-icon="solar:alt-arrow-right-linear"></span>
+</div>
+<div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+<div class="flex items-center gap-3">
+<span class="iconify text-blue-600" data-icon="solar:cloud-download-bold"></span>
+<span class="text-xs font-bold text-gray-700">离线缓存管理</span>
+</div>
+<span class="iconify text-gray-300" data-icon="solar:alt-arrow-right-linear"></span>
+</div>
+</div>
+<!-- 6. 登出按钮 Section -->
+<a class="block w-full text-center py-4 text-red-500 text-xs font-bold mt-4" href="https://modao.cc/agent-py/workspace/69ad9756526952848d991285/企业培训APP原型_v2.html/login.html?render_html=true">
+                退出当前企业账号
+            </a>
+</div>
+<!-- 底部导航 Section -->
+<div class="absolute bottom-0 w-full h-20 bg-white border-t border-gray-100 flex items-center justify-around px-4 pb-4">
+<a class="flex flex-col items-center gap-1 text-gray-300" href="https://modao.cc/agent-py/workspace/69ad9756526952848d991285/企业培训APP原型_v2.html/index.html?render_html=true">
+<span class="iconify text-2xl" data-icon="solar:home-2-linear"></span>
+<span class="text-[10px] font-bold">看板</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-gray-300" href="https://modao.cc/agent-py/workspace/69ad9756526952848d991285/企业培训APP原型_v2.html/courses.html?render_html=true">
+<span class="iconify text-2xl" data-icon="solar:play-stream-linear"></span>
+<span class="text-[10px] font-bold">学习</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-gray-300" href="https://modao.cc/agent-py/workspace/69ad9756526952848d991285/企业培训APP原型_v2.html/exam.html?render_html=true">
+<span class="iconify text-2xl" data-icon="solar:document-add-linear"></span>
+<span class="text-[10px] font-bold">考试</span>
+</a>
+<a class="flex flex-col items-center gap-1 tab-active" href="https://modao.cc/agent-py/workspace/69ad9756526952848d991285/企业培训APP原型_v2.html/profile.html?render_html=true">
+<span class="iconify text-2xl" data-icon="solar:user-bold"></span>
+<span class="text-[10px] font-bold">我的</span>
+</a>
+</div>
+</div>
+</body>
+</html>
