@@ -31,21 +31,6 @@ const PROFILE_TABS: TabItem[] = [
   { key: 'profile', label: '我的', iconName: 'Profile' },
 ];
 
-/** 荣誉勋章数据 */
-const MEDALS: Array<{
-  id: number;
-  name: string;
-  bgColor: string;
-  iconColor: string;
-  iconName: any;
-  locked?: boolean;
-}> = [
-  { id: 1, name: '初级认证', bgColor: '#FFFBEB', iconColor: '#F59E0B', iconName: 'Medal' },
-  { id: 2, name: '效率达人', bgColor: '#EFF6FF', iconColor: '#3B82F6', iconName: 'Crown' },
-  { id: 3, name: '全能工匠', bgColor: '#ECFDF5', iconColor: '#10B981', iconName: 'Reorder' },
-  { id: 4, name: '神秘奖励', bgColor: '#F3F4F6', iconColor: '#9CA3AF', iconName: 'Star', locked: true },
-];
-
 /** 学习记录数据 */
 const LEARNING_HISTORY = [
   {
@@ -83,23 +68,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
       navigation.navigate('Home');
     }
   };
-
-  /** 渲染荣誉勋章 */
-  const renderMedal = (medal: typeof MEDALS[0]) => (
-    <View key={medal.id} style={styles.medalItem}>
-      <View style={[styles.medalIconContainer, { backgroundColor: medal.bgColor }]}>
-        <Icon name={medal.iconName} size={28} color={medal.iconColor} />
-        {medal.locked && (
-          <View style={styles.medalLockOverlay}>
-            <Icon name="Star" size={12} color="#9CA3AF" />
-          </View>
-        )}
-      </View>
-      <Text style={[styles.medalName, medal.locked && styles.medalNameLocked]}>
-        {medal.name}
-      </Text>
-    </View>
-  );
 
   /** 渲染学习记录 */
   const renderLearningRecord = (record: typeof LEARNING_HISTORY[0]) => (
@@ -170,14 +138,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               <Text style={styles.dashboardLabel}>完成率</Text>
               <Text style={styles.dashboardUnit}>%</Text>
             </View>
-          </View>
-        </View>
-
-        {/* 荣誉墙 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>我的荣誉</Text>
-          <View style={styles.medalsContainer}>
-            {MEDALS.map(renderMedal)}
           </View>
         </View>
 
@@ -325,38 +285,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1F2937',
     marginBottom: 12,
-  },
-  medalsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  medalItem: {
-    alignItems: 'center',
-  },
-  medalIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  medalLockOverlay: {
-    position: 'absolute',
-    inset: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: 16,
-  },
-  medalName: {
-    fontSize: 10,
-    color: '#6B7280',
-    marginTop: 8,
-    fontWeight: '600',
-  },
-  medalNameLocked: {
-    color: '#D1D5DB',
   },
   learningHistoryContainer: {
     backgroundColor: '#FFFFFF',
