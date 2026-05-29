@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   ScrollView,
   StatusBar,
   ActivityIndicator,
@@ -12,12 +11,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import BottomTabBar, { TabItem } from '../components/BottomTabBar';
-import CourseCard from '../components/CourseCard';
-import { fetchHomeData } from '../services/api';
-import { HomeResponse, CourseModule } from '../types/home';
-import { RootStackParamList } from '../types/navigation';
-import { Icon } from '../components/Icons';
+import BottomTabBar, { TabItem } from '../../components/BottomTabBar';
+import CourseCard from '../../components/CourseCard';
+import { fetchHomeData } from '../../services/api';
+import { HomeResponse, CourseModule } from '../../types/home';
+import { RootStackParamList } from '../../types/navigation';
+import { Icon } from '../../components/Icons';
+import styles from './styles';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
@@ -279,234 +279,5 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FB',
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  greeting: {
-    flex: 1,
-  },
-  greetingSubtitle: {
-    fontSize: 14,
-    color: '#667085',
-    marginBottom: 2,
-  },
-  userName: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    letterSpacing: -0.01,
-  },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#4F8EF7',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.35,
-    shadowRadius: 24,
-    elevation: 8,
-  },
-  avatarText: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 18,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: '#667085',
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  errorText: {
-    fontSize: 14,
-    color: '#EF4444',
-    textAlign: 'center',
-  },
-  retryButton: {
-    marginTop: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: '#4F8EF7',
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    fontSize: 14,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  heroCard: {
-    marginHorizontal: 20,
-    marginBottom: 24,
-    borderRadius: 20,
-    padding: 20,
-    backgroundColor: 'rgba(79, 142, 247, 0.08)',
-    overflow: 'hidden',
-  },
-  heroContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  heroText: {
-    flex: 1,
-  },
-  heroTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    marginBottom: 4,
-  },
-  heroSubtitle: {
-    fontSize: 14,
-    color: '#667085',
-    marginBottom: 16,
-  },
-  progressBar: {
-    width: 140,
-    height: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
-    borderRadius: 9999,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#4F8EF7',
-    borderRadius: 9999,
-  },
-  heroThumbnail: {
-    width: 100,
-    height: 100,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#667EEA',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.35,
-    shadowRadius: 32,
-    elevation: 10,
-  },
-  heroEmoji: {
-    fontSize: 36,
-  },
-  section: {
-    marginTop: 24,
-    paddingHorizontal: 20,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  sectionLink: {
-    fontSize: 14,
-    color: '#4F8EF7',
-    fontWeight: '500',
-  },
-  continueCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 16,
-    flexDirection: 'row',
-    gap: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 12,
-    elevation: 4,
-  },
-  continueThumb: {
-    width: 100,
-    height: 100,
-    borderRadius: 16,
-    flexShrink: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  continueEmoji: {
-    fontSize: 32,
-  },
-  continueContent: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  continueTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    lineHeight: 20.8,
-  },
-  continueMeta: {
-    fontSize: 14,
-    color: '#667085',
-    marginTop: 4,
-  },
-  continueProgress: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  miniProgress: {
-    flex: 1,
-    height: 6,
-    backgroundColor: '#E7E8EE',
-    borderRadius: 9999,
-    overflow: 'hidden',
-    marginRight: 12,
-  },
-  miniProgressFill: {
-    height: '100%',
-    backgroundColor: '#4F8EF7',
-    borderRadius: 9999,
-  },
-  playBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#4F8EF7',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 16,
-    elevation: 6,
-  },
-  courseGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-  },
-});
 
 export default HomeScreen;

@@ -24,7 +24,7 @@ function AppNavigator() {
     <NavigationContainer>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <Stack.Navigator
-        initialRouteName={initialRouteName}
+        initialRouteName={'Login'}
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
