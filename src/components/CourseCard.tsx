@@ -1,18 +1,29 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { Course, CourseType } from '../types/home';
-import { Icon } from './Icons';
 
 interface CourseCardProps {
   course: Course;
   onPress?: (jumpUrl: string) => void;
+  index?: number;
 }
 
-const getCourseIcon = (type: CourseType): 'Clock' | 'Collection' => {
-  return type === 'series' ? 'Collection' : 'Clock';
+const getGradientColors = (index: number = 0): string[] => {
+  const gradients = [
+    ['#11998E', '#38EF7D'],
+    ['#667EEA', '#764BA2'],
+    ['#F093FB', '#F5576C'],
+    ['#4FACFE', '#00F2FE'],
+  ];
+  return gradients[index % gradients.length];
 };
 
-const CourseCard: React.FC<CourseCardProps> = ({ course, onPress }) => {
+const getCourseEmoji = (type: CourseType): string => {
+  return type === 'series' ? '👷' : '🔧';
+};
+
+const CourseCard: React.FC<CourseCardProps> = ({ course, onPress, index = 0 }) => {
   const handlePress = () => {
     if (onPress) {
       onPress(course.jumpUrl);
@@ -20,76 +31,59 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onPress }) => {
   };
 
   return (
-    <View
+    <TouchableOpacity
       style={styles.courseCard}
-      onTouchEnd={handlePress}
+      activeOpacity={0.8}
+      onPress={handlePress}
     >
-      <View style={styles.courseThumbnailContainer}>
-        <Image
-          source={{ uri: course.coverImage }}
-          style={styles.courseThumbnail}
-        />
-        {course.label && course.labelStyle && (
-          <View style={[styles.courseBadge, { backgroundColor: course.labelStyle.backgroundColor }]}>
-            <Text style={[styles.courseBadgeText, { color: course.labelStyle.textColor }]}>
-              {course.label}
-            </Text>
-          </View>
-        )}
-      </View>
-      <Text style={styles.courseCardTitle} numberOfLines={2}>{course.title}</Text>
-      <View style={styles.courseDuration}>
-        <Icon name={getCourseIcon(course.type)} size={12} />
-        <Text style={styles.courseDurationText}>{course.duration}</Text>
-      </View>
-    </View>
+      <LinearGradient
+        colors={getGradientColors(index)}
+        style={styles.courseThumbnail}
+      >
+        <Text style={styles.courseEmoji}>{getCourseEmoji(course.type)}</Text>
+      </LinearGradient>
+      <Text style={styles.courseTitle} numberOfLines={2}>
+        {course.title}
+      </Text>
+      <Text style={styles.courseMeta}>{course.duration}</Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   courseCard: {
     flex: 1,
-  },
-  courseThumbnailContainer: {
-    aspectRatio: 16 / 9,
-    backgroundColor: '#EEF2FF',
-    borderRadius: 12,
-    overflow: 'hidden',
-    position: 'relative',
+    minWidth: '45%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 4,
   },
   courseThumbnail: {
     width: '100%',
-    height: '100%',
-  },
-  courseBadge: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  courseBadgeText: {
-    fontSize: 8,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-  },
-  courseCardTitle: {
-    marginTop: 8,
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#1F2937',
-    lineHeight: 16,
-  },
-  courseDuration: {
-    flexDirection: 'row',
+    height: 80,
+    borderRadius: 16,
+    marginBottom: 12,
     alignItems: 'center',
-    marginTop: 4,
+    justifyContent: 'center',
   },
-  courseDurationText: {
-    fontSize: 9,
-    color: '#9CA3AF',
-    marginLeft: 2,
+  courseEmoji: {
+    fontSize: 28,
+  },
+  courseTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    lineHeight: 18.2,
+    marginBottom: 4,
+  },
+  courseMeta: {
+    fontSize: 12,
+    color: '#667085',
   },
 });
 

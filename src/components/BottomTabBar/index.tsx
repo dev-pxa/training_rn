@@ -30,8 +30,8 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({
   tabs,
   activeKey,
   style,
-  activeColor = '#2563EB',
-  defaultColor = '#D1D5DB',
+  activeColor = '#4F8EF7',
+  defaultColor = '#667085',
 }) => {
   const handleTabPress = (tab: TabItem) => {
     if (tab.onPress) {
@@ -64,15 +64,16 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
-    backgroundColor: '#FFFFFF',
+    height: 84,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
+    borderTopColor: '#E7E8EE',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-around',
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingTop: 10,
+    paddingBottom: 20,
   },
   tabItem: {
     flexDirection: 'column',
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   tabText: {
-    fontSize: 10,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '500',
   },
 });
 

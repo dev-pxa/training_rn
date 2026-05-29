@@ -6,7 +6,7 @@ interface LearnIconProps {
   size?: number;
 }
 
-const LearnIcon = ({ color = '#D1D5DB', size = 28 }: LearnIconProps) => (
+const LearnIcon = ({ color = '#667085', size = 28 }: LearnIconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
       d="M2 8.5L12 3L22 8.5L12 14L2 8.5Z"

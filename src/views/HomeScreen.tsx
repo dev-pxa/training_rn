@@ -4,14 +4,14 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
   StatusBar,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import Carousel from '../components/Carousel';
+import LinearGradient from 'react-native-linear-gradient';
 import BottomTabBar, { TabItem } from '../components/BottomTabBar';
 import CourseCard from '../components/CourseCard';
 import { fetchHomeData } from '../services/api';
@@ -83,6 +83,49 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
   };
 
+  /** 渲染用户头像 */
+  const renderAvatar = () => (
+    <LinearGradient
+      colors={['#4F8EF7', '#7C6EFC']}
+      style={styles.avatar}
+    >
+      <Text style={styles.avatarText}>张</Text>
+    </LinearGradient>
+  );
+
+  /** 渲染Hero Card继续学习模块 */
+  const renderHeroCard = () => {
+    if (!homeData?.continueLearning?.course) {
+      return null;
+    }
+
+    const { course } = homeData.continueLearning;
+
+    return (
+      <TouchableOpacity
+        style={styles.heroCard}
+        activeOpacity={0.8}
+        onPress={() => handleCoursePress(course.jumpUrl)}
+      >
+        <View style={styles.heroContent}>
+          <View style={styles.heroText}>
+            <Text style={styles.heroTitle}>继续学习</Text>
+            <Text style={styles.heroSubtitle}>上次看到 {course.progress}%</Text>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${course.progress}%` }]} />
+            </View>
+          </View>
+          <LinearGradient
+            colors={['#667EEA', '#764BA2']}
+            style={styles.heroThumbnail}
+          >
+            <Text style={styles.heroEmoji}>🎓</Text>
+          </LinearGradient>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   /** 渲染继续学习模块 */
   const renderContinueLearning = () => {
     if (!homeData?.continueLearning?.course) {
@@ -95,33 +138,39 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>{sectionTitle}</Text>
-          <View onTouchEnd={() => handleModuleLinkPress(sectionLink)}>
+          <TouchableOpacity onPress={() => handleModuleLinkPress(sectionLink)}>
             <Text style={styles.sectionLink}>全部历史</Text>
-          </View>
+          </TouchableOpacity>
         </View>
-        <View
+        <TouchableOpacity
           style={styles.continueCard}
-          onTouchEnd={() => handleCoursePress(course.jumpUrl)}
+          activeOpacity={0.8}
+          onPress={() => handleCoursePress(course.jumpUrl)}
         >
-          <View style={styles.thumbnailContainer}>
-            <Image
-              source={{ uri: course.coverImage }}
-              style={styles.thumbnail}
-            />
-            <View style={styles.playOverlay}>
-              <View style={styles.playIcon} />
+          <LinearGradient
+            colors={['#11998E', '#38EF7D']}
+            style={styles.continueThumb}
+          >
+            <Text style={styles.continueEmoji}>🎓</Text>
+          </LinearGradient>
+          <View style={styles.continueContent}>
+            <View>
+              <Text style={styles.continueTitle} numberOfLines={2}>{course.title}</Text>
+              <Text style={styles.continueMeta}>上次看到 · 12分钟</Text>
+            </View>
+            <View style={styles.continueProgress}>
+              <View style={styles.miniProgress}>
+                <View style={[styles.miniProgressFill, { width: `${course.progress}%` }]} />
+              </View>
+              <LinearGradient
+                colors={['#4F8EF7', '#7C6EFC']}
+                style={styles.playBtn}
+              >
+                <Icon name="Play" size={16} color="#FFFFFF" />
+              </LinearGradient>
             </View>
           </View>
-          <View style={styles.courseInfo}>
-            <Text style={styles.courseTitle} numberOfLines={1}>{course.title}</Text>
-            <Text style={styles.courseProgress}>
-              上次看至：{course.currentTime} / {course.totalTime}
-            </Text>
-            <View style={styles.courseProgressBar}>
-              <View style={[styles.courseProgressFill, { width: `${course.progress}%` }]} />
-            </View>
-          </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -131,16 +180,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <View key={module.moduleType} style={styles.section}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{module.sectionTitle}</Text>
-        <View onTouchEnd={() => handleModuleLinkPress(module.sectionLink)}>
+        <TouchableOpacity onPress={() => handleModuleLinkPress(module.sectionLink)}>
           <Text style={styles.sectionLink}>查看全部</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.courseGrid}>
-        {module.courses.map((course) => (
+        {module.courses.map((course, index) => (
           <CourseCard
             key={course.id}
             course={course}
             onPress={handleCoursePress}
+            index={index}
           />
         ))}
       </View>
@@ -151,9 +201,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#2563EB" />
+          <ActivityIndicator size="large" color="#4F8EF7" />
           <Text style={styles.loadingText}>加载中...</Text>
         </View>
       </SafeAreaView>
@@ -164,12 +214,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   if (error || !homeData) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error || '数据加载失败'}</Text>
-          <View
+          <TouchableOpacity
             style={styles.retryButton}
-            onTouchEnd={() => {
+            onPress={() => {
               setLoading(true);
               fetchHomeData()
                 .then((res) => {
@@ -185,7 +235,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             }}
           >
             <Text style={styles.retryButtonText}>重试</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -199,28 +249,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   /** 渲染主页面 */
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      {/* 顶部导航 */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.welcomeText}>欢迎回来,</Text>
-          <View style={styles.userRow}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* 顶部导航 */}
+        <View style={styles.header}>
+          <View style={styles.greeting}>
+            <Text style={styles.greetingSubtitle}>欢迎回来，</Text>
             <Text style={styles.userName}>张小智</Text>
           </View>
+          {renderAvatar()}
         </View>
-        {/* TODO 通知功能暂时先留着，二期做 */}
-        <View style={styles.notificationIcon}>
-          <Icon name="Bell" />
-          <View style={styles.notificationDot} />
-        </View>
-      </View>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* 轮播图组件 */}
-        <Carousel
-          data={homeData.carousel.items}
-          interval={homeData.carousel.interval}
-        />
+
+        {/* Hero Card 继续学习 */}
+        {renderHeroCard()}
 
         {/* 继续学习模块 */}
         {renderContinueLearning()}
@@ -241,45 +283,46 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F8F9FB',
   },
   header: {
-    paddingHorizontal: 24,
-    paddingTop: 48,
-    paddingBottom: 16,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 24,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
   },
-  welcomeText: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 2,
+  greeting: {
+    flex: 1,
   },
-  userRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  greetingSubtitle: {
+    fontSize: 14,
+    color: '#667085',
+    marginBottom: 2,
   },
   userName: {
-    fontSize: 20,
-    fontWeight: '900',
-    color: '#1F2937',
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    letterSpacing: -0.01,
   },
-  notificationIcon: {
-    position: 'relative',
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#4F8EF7',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 24,
+    elevation: 8,
   },
-  notificationDot: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 8,
-    height: 8,
-    backgroundColor: '#EF4444',
-    borderRadius: 9999,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
+  avatarText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 18,
   },
   loadingContainer: {
     flex: 1,
@@ -289,7 +332,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 12,
     fontSize: 14,
-    color: '#9CA3AF',
+    color: '#667085',
   },
   errorContainer: {
     flex: 1,
@@ -306,7 +349,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 24,
     paddingVertical: 12,
-    backgroundColor: '#2563EB',
+    backgroundColor: '#4F8EF7',
     borderRadius: 8,
   },
   retryButtonText: {
@@ -316,99 +359,153 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: 24,
+  },
+  heroCard: {
+    marginHorizontal: 20,
+    marginBottom: 24,
+    borderRadius: 20,
+    padding: 20,
+    backgroundColor: 'rgba(79, 142, 247, 0.08)',
+    overflow: 'hidden',
+  },
+  heroContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  heroText: {
+    flex: 1,
+  },
+  heroTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  heroSubtitle: {
+    fontSize: 14,
+    color: '#667085',
+    marginBottom: 16,
+  },
+  progressBar: {
+    width: 140,
+    height: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    borderRadius: 9999,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#4F8EF7',
+    borderRadius: 9999,
+  },
+  heroThumbnail: {
+    width: 100,
+    height: 100,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#667EEA',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.35,
+    shadowRadius: 32,
+    elevation: 10,
+  },
+  heroEmoji: {
+    fontSize: 36,
   },
   section: {
     marginTop: 24,
+    paddingHorizontal: 20,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 22,
     fontWeight: '700',
-    color: '#1F2937',
+    color: '#1A1A1A',
   },
   sectionLink: {
-    fontSize: 12,
-    color: '#2563EB',
+    fontSize: 14,
+    color: '#4F8EF7',
+    fontWeight: '500',
   },
   continueCard: {
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#F3F4F6',
-    padding: 12,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    borderRadius: 20,
+    padding: 16,
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    gap: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 4,
   },
-  thumbnailContainer: {
-    width: 80,
-    height: 56,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 8,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  thumbnail: {
-    width: '100%',
-    height: '100%',
-  },
-  playOverlay: {
-    position: 'absolute',
-    inset: 0,
+  continueThumb: {
+    width: 100,
+    height: 100,
+    borderRadius: 16,
+    flexShrink: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
-  playIcon: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 12,
-    borderTopWidth: 8,
-    borderBottomWidth: 8,
-    borderLeftColor: '#FFFFFF',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
+  continueEmoji: {
+    fontSize: 32,
   },
-  courseInfo: {
+  continueContent: {
     flex: 1,
-    overflow: 'hidden',
+    justifyContent: 'space-between',
   },
-  courseTitle: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#1F2937',
+  continueTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    lineHeight: 20.8,
   },
-  courseProgress: {
-    fontSize: 10,
-    color: '#9CA3AF',
+  continueMeta: {
+    fontSize: 14,
+    color: '#667085',
     marginTop: 4,
   },
-  courseProgressBar: {
-    marginTop: 8,
-    width: '100%',
-    height: 4,
-    backgroundColor: '#F3F4F6',
+  continueProgress: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  miniProgress: {
+    flex: 1,
+    height: 6,
+    backgroundColor: '#E7E8EE',
+    borderRadius: 9999,
+    overflow: 'hidden',
+    marginRight: 12,
+  },
+  miniProgressFill: {
+    height: '100%',
+    backgroundColor: '#4F8EF7',
     borderRadius: 9999,
   },
-  courseProgressFill: {
-    height: '100%',
-    backgroundColor: '#2563EB',
-    borderRadius: 9999,
+  playBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#4F8EF7',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 6,
   },
   courseGrid: {
     flexDirection: 'row',
-    gap: 12,
+    flexWrap: 'wrap',
+    gap: 16,
   },
 });
 
