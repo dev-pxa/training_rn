@@ -27,6 +27,8 @@ import ChevronDownIcon from './ChevronDownIcon';
 import CheckIcon from './CheckIcon';
 import XIcon from './XIcon';
 import LogoIcon from './LogoIcon';
+import EyeIcon from './EyeIcon';
+import PlusIcon from './PlusIcon';
 
 export type IconName =
   | 'Bell'
@@ -55,7 +57,9 @@ export type IconName =
   | 'ChevronDown'
   | 'Check'
   | 'X'
-  | 'Logo';
+  | 'Logo'
+  | 'Eye'
+  | 'Plus';
 
 interface IconProps {
   name: IconName;
@@ -100,6 +104,8 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Check: CheckIcon,
   X: XIcon,
   Logo: LogoIcon,
+  Eye: EyeIcon,
+  Plus: PlusIcon,
 };
 
 const Icon = ({ name, color, size, style, opacity }: IconProps) => {

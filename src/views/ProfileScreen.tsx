@@ -4,10 +4,10 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
@@ -35,24 +35,21 @@ const PROFILE_TABS: TabItem[] = [
 const LEARNING_HISTORY = [
   {
     id: 1,
-    courseName: '智慧安防：2026款传感器安装规范',
+    courseName: '智慧安防：2024传感器安装规范',
     lastWatched: '12分钟前',
-    progress: 80,
-    thumbnail: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/03d7492f51664383a7f9fe8bb5904a46.jpg',
+    emoji: '🎓',
   },
   {
     id: 2,
     courseName: '云端协同方案实操视频',
     lastWatched: '2小时前',
-    progress: 45,
-    thumbnail: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
+    emoji: '🔧',
   },
   {
     id: 3,
-    courseName: '工业级网关部署规范',
+    courseName: '工业网关部署规范',
     lastWatched: '昨天',
-    progress: 100,
-    thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600',
+    emoji: '👷',
   },
 ];
 
@@ -71,21 +68,25 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
   /** 渲染学习记录 */
   const renderLearningRecord = (record: typeof LEARNING_HISTORY[0]) => (
-    <View key={record.id} style={styles.learningRecordItem}>
-      <Image source={{ uri: record.thumbnail }} style={styles.learningThumbnail} />
+    <TouchableOpacity key={record.id} style={styles.learningRecordItem} activeOpacity={0.7}>
+      <LinearGradient
+        colors={['#667EEA', '#764BA2']}
+        style={styles.learningThumbnail}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <Text style={styles.learningEmoji}>{record.emoji}</Text>
+      </LinearGradient>
       <View style={styles.learningInfo}>
         <Text style={styles.learningCourseName} numberOfLines={1}>
           {record.courseName}
         </Text>
-        <View style={styles.learningMeta}>
-          <Text style={styles.learningTime}>{record.lastWatched}</Text>
-          <View style={styles.learningProgressBar}>
-            <View style={[styles.learningProgressFill, { width: `${record.progress}%` }]} />
-          </View>
-        </View>
+        <Text style={styles.learningTime}>{record.lastWatched}</Text>
       </View>
-      <Icon name="PlayCircle" size={32} color="#2563EB" />
-    </View>
+      <View style={styles.playButton}>
+        <Icon name="Play" size={18} color="#4F8EF7" />
+      </View>
+    </TouchableOpacity>
   );
 
   /** Tab 配置添加点击事件 */
@@ -95,86 +96,81 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   }));
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#EFF6FF" />
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F8F9FB" />
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* 头部信息 */}
-        <View style={styles.headerGradient}>
-          <View style={styles.header}>
-            <View style={styles.userInfo}>
-              <Image
-                source={{
-                  uri: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/066a0b30f67b4d83ab5198333a5c7349.jpg',
-                }}
-                style={styles.avatar}
-              />
-              <View style={styles.userDetails}>
-                <Text style={styles.userName}>张小智</Text>
-                {/* TODO 一期不做，二期做，代码保留 */}
-                {/* <Text style={styles.userDept}>智能家居事业部 · 华东区</Text> */}
-              </View>
+        <View style={styles.header}>
+          <View style={styles.userInfo}>
+            <View style={styles.avatarContainer}>
+              <LinearGradient
+                colors={['#4F8EF7', '#7C6EFC']}
+                style={styles.avatarGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <Text style={styles.avatarText}>张</Text>
+              </LinearGradient>
             </View>
-            <TouchableOpacity style={styles.editButton}>
-              <Text style={styles.editButtonText}>编辑</Text>
-            </TouchableOpacity>
+            <View style={styles.userDetails}>
+              <Text style={styles.userName}>张小智</Text>
+              <Text style={styles.userRole}>安装岗 · 智家科技总部</Text>
+            </View>
           </View>
+          <TouchableOpacity style={styles.editButton}>
+            <Text style={styles.editButtonText}>编辑</Text>
+          </TouchableOpacity>
+        </View>
 
-          {/* 数据看板 */}
-          <View style={styles.dashboard}>
-            <View style={styles.dashboardItem}>
-              <Text style={styles.dashboardValue}>126</Text>
-              <Text style={styles.dashboardLabel}>累计学习时长</Text>
-              <Text style={styles.dashboardUnit}>小时</Text>
+        {/* 数据看板 */}
+        <View style={styles.statsCard}>
+          <View style={styles.statsGrid}>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>126</Text>
+              <Text style={styles.statLabel}>累计学习时长</Text>
             </View>
-            <View style={styles.dashboardDivider} />
-            <View style={styles.dashboardItem}>
-              <Text style={styles.dashboardValue}>5</Text>
-              <Text style={styles.dashboardLabel}>获得证书</Text>
-              <Text style={styles.dashboardUnit}>张</Text>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>5</Text>
+              <Text style={styles.statLabel}>获得证书</Text>
             </View>
-            <View style={styles.dashboardDivider} />
-            <View style={styles.dashboardItem}>
-              <Text style={styles.dashboardValue}>82</Text>
-              <Text style={styles.dashboardLabel}>完成率</Text>
-              <Text style={styles.dashboardUnit}>%</Text>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>82</Text>
+              <Text style={styles.statLabel}>完成率</Text>
             </View>
           </View>
         </View>
 
         {/* 学习历史 */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>最近学习记录</Text>
-            <TouchableOpacity>
-              <Text style={styles.sectionLink}>查看全部</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.learningHistoryContainer}>
-            {LEARNING_HISTORY.map(renderLearningRecord)}
-          </View>
+        <Text style={styles.sectionTitle}>最近学习记录</Text>
+        <View style={styles.recentList}>
+          {LEARNING_HISTORY.map(renderLearningRecord)}
         </View>
 
         {/* 设置入口 */}
-        <View style={styles.settingsContainer}>
-          <TouchableOpacity style={styles.settingsItem}>
-            <View style={styles.settingsItemLeft}>
-              <Icon name="Settings" size={24} color="#2563EB" />
-              <Text style={styles.settingsItemText}>系统设置与隐私</Text>
+        <View style={styles.menuGroup}>
+          <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+            <View style={[styles.menuIcon, styles.menuIconBlue]}>
+              <Icon name="Eye" size={20} color="#4F8EF7" />
             </View>
-            <Icon name="ArrowRight" size={20} color="#D1D5DB" />
+            <Text style={styles.menuLabel}>系统设置与隐私</Text>
+            <View style={styles.menuArrow}>
+              <Icon name="ArrowRight" size={18} color="#667085" />
+            </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.settingsItem}>
-            <View style={styles.settingsItemLeft}>
-              <Icon name="CloudDownload" size={24} color="#2563EB" />
-              <Text style={styles.settingsItemText}>离线缓存管理</Text>
+          <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+            <View style={[styles.menuIcon, styles.menuIconGray]}>
+              <Icon name="Plus" size={20} color="#667085" />
             </View>
-            <Icon name="ArrowRight" size={20} color="#D1D5DB" />
+            <Text style={styles.menuLabel}>离线缓存管理</Text>
+            <View style={styles.menuArrow}>
+              <Icon name="ArrowRight" size={18} color="#667085" />
+            </View>
           </TouchableOpacity>
         </View>
 
         {/* 登出按钮 */}
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} activeOpacity={0.7}>
           <Text style={styles.logoutText}>退出当前企业账号</Text>
         </TouchableOpacity>
 
@@ -191,198 +187,203 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F8F9FB',
   },
   scrollView: {
     flex: 1,
   },
-  headerGradient: {
-    backgroundColor: '#EFF6FF',
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   header: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 32,
-    backgroundColor: '#EFF6FF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 24,
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
-    borderWidth: 3,
-    borderColor: '#FFFFFF',
+  avatarContainer: {
+    shadowColor: '#4F8EF7',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.3,
+    shadowRadius: 32,
+    elevation: 8,
+  },
+  avatarGradient: {
+    width: 72,
+    height: 72,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarText: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
   userDetails: {
     marginLeft: 16,
   },
   userName: {
     fontSize: 22,
-    fontWeight: '900',
-    color: '#1F2937',
-  },
-  userDept: {
-    fontSize: 12,
-    color: '#2563EB',
     fontWeight: '700',
-    marginTop: 2,
+    color: '#1A1A1A',
+    letterSpacing: -0.01,
   },
-  editButton: {
-    position: 'absolute',
-    top: 32,
-    right: 24,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  editButtonText: {
-    fontSize: 12,
-    color: '#6B7280',
-    fontWeight: '600',
-  },
-  dashboard: {
-    flexDirection: 'row',
-    marginHorizontal: 24,
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  dashboardItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  dashboardValue: {
-    fontSize: 24,
-    fontWeight: '900',
-    color: '#1F2937',
-  },
-  dashboardLabel: {
-    fontSize: 10,
-    color: '#9CA3AF',
+  userRole: {
+    fontSize: 14,
+    color: '#667085',
     marginTop: 4,
   },
-  dashboardUnit: {
-    fontSize: 10,
-    color: '#9CA3AF',
+  editButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 9999,
+    borderWidth: 1,
+    borderColor: '#E7E8EE',
   },
-  dashboardDivider: {
-    width: 1,
-    backgroundColor: '#F3F4F6',
-    marginVertical: 4,
+  editButtonText: {
+    fontSize: 14,
+    color: '#4B5563',
+    fontWeight: '500',
   },
-  section: {
-    marginTop: 24,
-    paddingHorizontal: 24,
+  statsCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 2,
   },
-  sectionHeader: {
+  statsGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+  },
+  statItem: {
     alignItems: 'center',
-    marginBottom: 12,
+  },
+  statValue: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#667085',
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '700',
-    color: '#1F2937',
+    color: '#1A1A1A',
+    marginBottom: 16,
   },
-  sectionLink: {
-    fontSize: 12,
-    color: '#2563EB',
-  },
-  learningHistoryContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 12,
+  recentList: {
+    marginBottom: 24,
   },
   learningRecordItem: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 2,
   },
   learningThumbnail: {
     width: 48,
-    height: 36,
-    borderRadius: 8,
-    backgroundColor: '#E5E7EB',
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: '#667EEA',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  learningEmoji: {
+    fontSize: 20,
   },
   learningInfo: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 16,
   },
   learningCourseName: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#1F2937',
-  },
-  learningMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
+    color: '#1A1A1A',
+    marginBottom: 2,
   },
   learningTime: {
-    fontSize: 10,
-    color: '#9CA3AF',
+    fontSize: 12,
+    color: '#667085',
   },
-  learningProgressBar: {
-    marginLeft: 8,
-    width: 60,
-    height: 4,
-    backgroundColor: '#F3F4F6',
-    borderRadius: 2,
+  playButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F0F5FF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  learningProgressFill: {
-    height: '100%',
-    backgroundColor: '#2563EB',
-    borderRadius: 2,
-  },
-  settingsContainer: {
-    marginTop: 24,
-    marginHorizontal: 24,
+  menuGroup: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 4,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 2,
+    marginBottom: 20,
+    overflow: 'hidden',
   },
-  settingsItem: {
+  menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
-  settingsItemLeft: {
-    flexDirection: 'row',
+  menuIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 16,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  settingsItemText: {
-    fontSize: 14,
-    color: '#1F2937',
-    marginLeft: 12,
+  menuIconBlue: {
+    backgroundColor: '#F0F5FF',
+  },
+  menuIconGray: {
+    backgroundColor: '#F4F5F7',
+  },
+  menuLabel: {
+    flex: 1,
+    fontSize: 16,
     fontWeight: '500',
+    color: '#1A1A1A',
+    marginLeft: 16,
+  },
+  menuArrow: {
+    flexShrink: 0,
   },
   logoutButton: {
-    marginTop: 24,
-    marginHorizontal: 24,
+    width: '100%',
     paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    backgroundColor: '#FEEFEF',
+    borderRadius: 20,
     alignItems: 'center',
   },
   logoutText: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#EF4444',
     fontWeight: '600',
   },
