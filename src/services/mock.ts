@@ -48,9 +48,22 @@ export const mockHomeData: HomeResponse = {
     courseModules: [
       {
         moduleType: 'required',
-        sectionTitle: '岗位必修 (安装岗)',
-        sectionLink: '/learning/required',
+        sectionTitle: '岗位必修',
+        sectionLink: '/courses/required',
         courses: [
+          {
+            id: 'course_001',
+            title: '智慧安防：2026款传感器安装规范',
+            coverImage: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/03d7492f51664383a7f9fe8bb5904a46.jpg',
+            type: 'micro',
+            duration: '45分钟',
+            label: '必修',
+            labelStyle: {
+              backgroundColor: '#EF4444',
+              textColor: '#FFFFFF',
+            },
+            jumpUrl: '/learning/detail/course_001',
+          },
           {
             id: 'course_002',
             title: '工业级网关部署规范',
@@ -82,17 +95,17 @@ export const mockHomeData: HomeResponse = {
       {
         moduleType: 'certificate',
         sectionTitle: '专业证书',
-        sectionLink: '/learning/certificate',
+        sectionLink: '/courses/certificate',
         courses: [
           {
             id: 'course_004',
-            title: '工业级网关部署规范',
-            coverImage: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
-            type: 'micro',
-            duration: '45分钟',
-            label: '热门',
+            title: '智能家居系统工程师认证',
+            coverImage: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600',
+            type: 'series',
+            duration: '12课时',
+            label: '认证',
             labelStyle: {
-              backgroundColor: '#4F46E5',
+              backgroundColor: '#F59E0B',
               textColor: '#FFFFFF',
             },
             jumpUrl: '/learning/detail/course_004',
@@ -127,61 +140,53 @@ export const mockLoginConfig: LoginConfigResponse = {
   agreements: {
     serviceAgreement: {
       title: '服务协议',
-      content: `
-服务协议
-
-欢迎使用智家学院企业培训平台服务！
-
-一、服务说明
-1. 智家学院是为企业员工提供在线培训学习的平台
-2. 本服务仅向企业授权用户开放
-3. 用户需通过企业验证代码和工号/手机号登录
-
-二、用户责任
-1. 用户应妥善保管自己的账号和密码
-2. 不得将账号转借他人使用
-3. 遵守平台使用规范，不得发布违规内容
-
-三、知识产权
-1. 平台所有课程内容均受知识产权保护
-2. 未经授权不得复制、传播课程内容
-
-四、免责声明
-1. 因网络故障等不可抗力导致的服务中断，我们不承担责任
-2. 用户因违反本协议造成的损失自行承担
-
-五、协议修改
-我们有权根据需要修改本协议，修改后的协议一经公布即生效。
-      `.trim(),
+      contents: [
+        {
+          title: '一、服务条款概述',
+          content: '欢迎使用企训通平台。在使用本平台前，请您仔细阅读以下服务条款。使用本平台即表示您已充分理解并同意本协议的全部内容。',
+        },
+        {
+          title: '二、用户账号',
+          content: '• 您应妥善保管账号和密码，对账号下的所有行为负责\n• 账号仅限本人使用，不得转借、转让或共享\n• 如发现账号异常使用，请立即通知平台管理员',
+        },
+        {
+          title: '三、学习服务',
+          content: '企训通为用户提供智能家居行业相关的培训课程、考试认证等服务。平台将持续更新课程内容，确保教学质量。',
+        },
+        {
+          title: '四、使用规范',
+          content: '• 不得利用平台从事任何违法违规活动\n• 不得恶意复制、传播平台课程内容\n• 不得干扰平台的正常运行\n• 尊重知识产权，保护平台内容版权',
+        },
+        {
+          title: '五、免责声明',
+          content: '平台将尽力保障服务的稳定性，但不对因不可抗力、网络故障等原因导致的服务中断承担责任。',
+        },
+      ],
     },
     privacyPolicy: {
-      title: '隐私条款',
-      content: `
-隐私条款
-
-我们非常重视您的隐私保护。
-
-一、信息收集
-1. 我们收集您的工号、姓名等基本信息用于身份验证
-2. 收集学习进度数据用于优化学习体验
-3. 不会收集与服务无关的个人信息
-
-二、信息使用
-1. 仅用于提供培训服务和改善用户体验
-2. 不会向第三方出售或出租您的个人信息
-3. 经您同意或法律法规要求的情况除外
-
-三、信息安全
-1. 我们采用行业标准的安全技术保护您的信息
-2. 定期进行安全审计和风险评估
-
-四、您的权利
-1. 您可以查询、更正您的个人信息
-2. 您可以申请注销账号
-
-五、联系我们
-如有隐私相关问题，请联系我们的隐私专员。
-      `.trim(),
+      title: '隐私政策',
+      contents: [
+        {
+          title: '一、隐私保护原则',
+          content: '我们非常重视您的隐私保护，将按照法律法规要求，采取安全保护措施保护您的个人信息安全。',
+        },
+        {
+          title: '二、信息收集',
+          content: '• 账号信息：工号、手机号、姓名等必要的身份信息\n• 学习数据：学习进度、考试成绩、学习时长等\n• 设备信息：用于保障账号安全的设备标识',
+        },
+        {
+          title: '三、信息使用',
+          content: '我们收集的信息仅用于提供学习服务、优化用户体验、保障账号安全等目的，不会向无关第三方泄露。',
+        },
+        {
+          title: '四、信息存储',
+          content: '您的个人信息将存储在安全的服务器上，我们采用加密技术保护数据安全，并按照法律规定的期限保存。',
+        },
+        {
+          title: '五、您的权利',
+          content: '• 查询、更正您的个人信息\n• 删除您的账号及相关数据\n• 撤回同意（可能影响服务使用）\n• 投诉和建议的权利',
+        },
+      ],
     },
   },
 };
@@ -202,8 +207,41 @@ export function mockLogin(request: LoginRequest): LoginResponse {
 }
 
 // 模拟网络延迟
-export function mockDelay<T>(data: T): Promise<T> {
-  return new Promise(resolve => {
-    setTimeout(() => resolve(data), MOCK_DELAY);
-  });
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export async function mockDelay<T>(data: T): Promise<T> {
+  if (!USE_MOCK) {
+    throw new Error('Mock is disabled');
+  }
+  await delay(MOCK_DELAY);
+  return data;
+}
+
+// 获取首页数据
+export async function fetchHomeData(): Promise<HomeResponse> {
+  if (!USE_MOCK) {
+    throw new Error('Mock is disabled');
+  }
+  await delay(MOCK_DELAY);
+  return mockHomeData;
+}
+
+// 获取登录页配置
+export async function fetchLoginConfig(): Promise<LoginConfigResponse> {
+  if (!USE_MOCK) {
+    throw new Error('Mock is disabled');
+  }
+  await delay(MOCK_DELAY);
+  return mockLoginConfig;
+}
+
+// 登录
+export async function login(request: LoginRequest): Promise<LoginResponse> {
+  if (!USE_MOCK) {
+    throw new Error('Mock is disabled');
+  }
+  await delay(MOCK_DELAY);
+  return mockLogin(request);
 }

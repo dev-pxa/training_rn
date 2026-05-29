@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
@@ -19,6 +20,7 @@ import { saveAuthData } from '../services/storage';
 import { Company, Agreement } from '../types/login';
 import { RootStackParamList } from '../types/navigation';
 import AgreementModal from '../components/AgreementModal';
+import { Icon } from '../components/Icons';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
@@ -41,7 +43,6 @@ function LoginScreen({ navigation }: LoginScreenProps) {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showAgreementModal, setShowAgreementModal] = useState(false);
 
-  // 获取登录页配置
   useEffect(() => {
     loadConfig();
   }, []);
@@ -61,7 +62,6 @@ function LoginScreen({ navigation }: LoginScreenProps) {
     }
   };
 
-  // 处理登录
   const handleLogin = async () => {
     if (!selectedCompany) {
       Alert.alert('提示', '请选择企业');
@@ -76,7 +76,6 @@ function LoginScreen({ navigation }: LoginScreenProps) {
       return;
     }
     if (!agreedToTerms) {
-      // 未勾选同意，弹出协议弹窗
       setShowAgreementModal(true);
       return;
     }
@@ -97,17 +96,14 @@ function LoginScreen({ navigation }: LoginScreenProps) {
     }
   };
 
-  // 打开协议弹窗
   const openAgreement = () => {
     setShowAgreementModal(true);
   };
 
-  // 关闭协议弹窗
   const closeAgreement = () => {
     setShowAgreementModal(false);
   };
 
-  // 同意协议
   const handleAgree = () => {
     setAgreedToTerms(true);
   };
@@ -115,62 +111,76 @@ function LoginScreen({ navigation }: LoginScreenProps) {
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2563eb" />
+        <ActivityIndicator size="large" color="#4F8EF7" />
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.content, { paddingTop: 40 + insets.top }]}>
-        {/* 企业品牌展示 */}
+      <View style={[styles.content, { paddingTop: insets.top }]}>
+        {/* 品牌展示 */}
         <View style={styles.brandSection}>
-          <View style={styles.logoContainer}>
-            <Text style={styles.logoIcon}>🎓</Text>
-          </View>
+          <LinearGradient
+            colors={['#4F8EF7', '#7C6EFC']}
+            style={styles.logoContainer}
+          >
+            <Icon name="Logo" color="#FFFFFF" size={64} />
+          </LinearGradient>
           <Text style={styles.brandTitle}>企训通</Text>
           <Text style={styles.brandSubtitle}>智能家居行业领先的培训平台</Text>
         </View>
 
         {/* 表单区域 */}
         <View style={styles.formSection}>
-          {/* 企业验证代码 - 下拉选择 */}
+          {/* 企业选择 */}
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>企业</Text>
             <TouchableOpacity
               style={styles.inputContainer}
-              onPress={() => setShowCompanyPicker(true)}>
-              <Text style={styles.inputIcon}>🏢</Text>
+              onPress={() => setShowCompanyPicker(true)}
+            >
               <Text
                 style={[
-                  styles.input,
+                  styles.inputText,
                   !selectedCompany && styles.placeholderText,
-                ]}>
+                ]}
+              >
                 {selectedCompany ? selectedCompany.name : '请选择企业'}
               </Text>
-              <Text style={styles.dropdownIcon}>▼</Text>
+              <View style={styles.chevronContainer}>
+                <Icon name="ChevronDown" color="#667085" size={20} />
+              </View>
             </TouchableOpacity>
           </View>
 
-          {/* 登录输入框 */}
-          <View style={styles.loginInputs}>
+          {/* 用户名输入 */}
+          <View style={styles.inputGroup}>
             <View style={styles.inputContainer}>
-              <Text style={styles.inputIcon}>👤</Text>
+              <View style={styles.inputIconContainer}>
+                <Icon name="User" color="#667085" size={28} />
+              </View>
               <TextInput
-                style={styles.input}
+                style={styles.inputText}
                 placeholder="工号 / 手机号"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#667085"
                 value={username}
                 onChangeText={setUsername}
                 autoCapitalize="none"
               />
             </View>
+          </View>
+
+          {/* 密码输入 */}
+          <View style={styles.inputGroup}>
             <View style={styles.inputContainer}>
-              <Text style={styles.inputIcon}>🔐</Text>
+              <View style={styles.inputIconContainer}>
+                <Icon name="Lock" color="#667085" size={28} />
+              </View>
               <TextInput
-                style={styles.input}
+                style={styles.inputText}
                 placeholder="请输入密码"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#667085"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -183,20 +193,23 @@ function LoginScreen({ navigation }: LoginScreenProps) {
         <View style={styles.quickActions}>
           <TouchableOpacity
             style={styles.checkboxContainer}
-            onPress={() => setAgreedToTerms(!agreedToTerms)}>
+            onPress={() => setAgreedToTerms(!agreedToTerms)}
+          >
             <View style={[styles.checkbox, agreedToTerms && styles.checkboxChecked]}>
-              {agreedToTerms && <Text style={styles.checkmark}>✓</Text>}
+              {agreedToTerms && <Icon name="Check" color="#FFFFFF" size={14} />}
             </View>
             <Text style={styles.checkboxLabel}>我已阅读并同意</Text>
             <Text
               style={styles.linkTextInline}
-              onPress={openAgreement}>
+              onPress={openAgreement}
+            >
               服务协议
             </Text>
             <Text style={styles.checkboxLabel}>和</Text>
             <Text
               style={styles.linkTextInline}
-              onPress={openAgreement}>
+              onPress={openAgreement}
+            >
               隐私条款
             </Text>
           </TouchableOpacity>
@@ -208,15 +221,21 @@ function LoginScreen({ navigation }: LoginScreenProps) {
         {/* 提交按钮 */}
         <View style={styles.submitSection}>
           <TouchableOpacity
-            style={[styles.loginButton, loggingIn && styles.loginButtonDisabled]}
+            style={[styles.loginButtonContainer, loggingIn && styles.loginButtonDisabled]}
             onPress={handleLogin}
             disabled={loggingIn}
-            activeOpacity={0.8}>
-            {loggingIn ? (
-              <ActivityIndicator color="#ffffff" />
-            ) : (
-              <Text style={styles.loginButtonText}>立即开启学习</Text>
-            )}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={['#4F8EF7', '#7C6EFC']}
+              style={styles.loginButton}
+            >
+              {loggingIn ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.loginButtonText}>立即开启学习</Text>
+              )}
+            </LinearGradient>
           </TouchableOpacity>
         </View>
 
@@ -227,23 +246,20 @@ function LoginScreen({ navigation }: LoginScreenProps) {
             <Text style={styles.registerLink}>立即注册</Text>
           </TouchableOpacity>
         </View>
-
-        {/* 底部版权 */}
-        <View style={styles.footer}>
-          <Text style={styles.copyrightText}>© 2026 SmartHome Training Lab</Text>
-        </View>
       </View>
 
-      {/* 企业选择下拉弹窗 */}
+      {/* 企业选择器弹窗 */}
       <Modal
         visible={showCompanyPicker}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setShowCompanyPicker(false)}>
+        onRequestClose={() => setShowCompanyPicker(false)}
+      >
         <TouchableOpacity
           style={styles.pickerOverlay}
           activeOpacity={1}
-          onPress={() => setShowCompanyPicker(false)}>
+          onPress={() => setShowCompanyPicker(false)}
+        >
           <View style={styles.pickerContainer}>
             <View style={styles.pickerHeader}>
               <Text style={styles.pickerTitle}>选择企业</Text>
@@ -263,13 +279,15 @@ function LoginScreen({ navigation }: LoginScreenProps) {
                   onPress={() => {
                     setSelectedCompany(item);
                     setShowCompanyPicker(false);
-                  }}>
+                  }}
+                >
                   <Text
                     style={[
                       styles.pickerItemText,
                       selectedCompany?.code === item.code &&
                         styles.pickerItemTextSelected,
-                    ]}>
+                    ]}
+                  >
                     {item.name}
                   </Text>
                   <Text style={styles.pickerItemCode}>{item.code}</Text>
@@ -284,16 +302,7 @@ function LoginScreen({ navigation }: LoginScreenProps) {
       {agreements && (
         <AgreementModal
           visible={showAgreementModal}
-          sections={[
-            {
-              title: agreements.serviceAgreement.title,
-              content: agreements.serviceAgreement.content,
-            },
-            {
-              title: agreements.privacyPolicy.title,
-              content: agreements.privacyPolicy.content,
-            },
-          ]}
+          agreements={agreements}
           onClose={closeAgreement}
           onAgree={handleAgree}
         />
@@ -305,103 +314,96 @@ function LoginScreen({ navigation }: LoginScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F8F9FB',
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F8F9FB',
     justifyContent: 'center',
     alignItems: 'center',
   },
   content: {
     flex: 1,
-    paddingHorizontal: 32,
+    paddingHorizontal: 20,
   },
   brandSection: {
-    marginTop: 40,
-    marginBottom: 48,
+    marginTop: 32,
+    marginBottom: 32,
     alignItems: 'center',
   },
   logoContainer: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#2563eb',
-    borderRadius: 16,
+    width: 120,
+    height: 120,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: '#bfdbfe',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  logoIcon: {
-    fontSize: 36,
-    color: '#ffffff',
+    marginBottom: 24,
+    shadowColor: '#4F8EF7',
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.3,
+    shadowRadius: 40,
+    elevation: 16,
   },
   brandTitle: {
-    fontSize: 24,
-    fontWeight: '900',
-    color: '#1f2937',
+    fontSize: 36,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    letterSpacing: -0.36,
   },
   brandSubtitle: {
-    fontSize: 14,
-    color: '#9ca3af',
+    fontSize: 18,
+    color: '#667085',
     marginTop: 8,
   },
   formSection: {
     width: '100%',
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   inputLabel: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#6b7280',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#4B5563',
     marginLeft: 4,
-    marginBottom: 4,
-    textTransform: 'uppercase',
+    marginBottom: 8,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    borderWidth: 1,
+    borderColor: '#E7E8EE',
   },
-  inputIcon: {
-    fontSize: 18,
-    marginRight: 8,
-    color: '#9ca3af',
+  inputIconContainer: {
+    marginRight: 12,
+    width: 28,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  input: {
+  inputText: {
     flex: 1,
     backgroundColor: 'transparent',
-    fontSize: 14,
-    color: '#000000',
+    fontSize: 16,
+    color: '#1A1A1A',
   },
   placeholderText: {
-    color: '#9ca3af',
+    color: '#667085',
   },
-  dropdownIcon: {
-    fontSize: 12,
-    color: '#9ca3af',
-  },
-  loginInputs: {
-    gap: 16,
-    paddingTop: 16,
+  chevronContainer: {
+    position: 'absolute',
+    right: 20,
   },
   quickActions: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginTop: 16,
+    marginTop: 4,
     paddingHorizontal: 4,
   },
   checkboxContainer: {
@@ -412,105 +414,85 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   checkbox: {
-    width: 16,
-    height: 16,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    marginRight: 4,
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#E7E8EE',
+    marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
-  },
-  checkmark: {
-    color: '#ffffff',
-    fontSize: 10,
-    fontWeight: 'bold',
+    backgroundColor: '#4F8EF7',
+    borderColor: '#4F8EF7',
   },
   checkboxLabel: {
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: 14,
+    color: '#4B5563',
   },
   forgotPassword: {
-    fontSize: 12,
-    color: '#2563eb',
+    fontSize: 14,
+    color: '#4F8EF7',
     fontWeight: '500',
   },
   submitSection: {
     width: '100%',
-    marginTop: 40,
+    marginTop: 32,
+  },
+  loginButtonContainer: {
+    borderRadius: 20,
+    shadowColor: '#4F8EF7',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.35,
+    shadowRadius: 32,
+    elevation: 12,
+  },
+  loginButtonDisabled: {
+    opacity: 0.5,
   },
   loginButton: {
     width: '100%',
-    backgroundColor: '#2563eb',
-    paddingVertical: 16,
-    borderRadius: 12,
+    paddingVertical: 18,
+    borderRadius: 20,
     alignItems: 'center',
-    shadowColor: '#bfdbfe',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 24,
-    elevation: 8,
-  },
-  loginButtonDisabled: {
-    backgroundColor: '#93c5fd',
   },
   loginButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+    letterSpacing: -0.18,
   },
   registerSection: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 24,
   },
   registerText: {
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: 14,
+    color: '#667085',
   },
   registerLink: {
-    fontSize: 12,
-    color: '#2563eb',
-    fontWeight: '500',
+    fontSize: 16,
+    color: '#4F8EF7',
+    fontWeight: '600',
     marginLeft: 4,
   },
-  footer: {
-    paddingBottom: 32,
-    alignItems: 'center',
-  },
-  agreementText: {
-    fontSize: 10,
-    color: '#9ca3af',
-    textAlign: 'center',
-  },
-  linkText: {
-    color: '#3b82f6',
-    textDecorationLine: 'underline',
-  },
   linkTextInline: {
-    fontSize: 12,
-    color: '#3b82f6',
-    textDecorationLine: 'underline',
+    fontSize: 14,
+    color: '#4F8EF7',
+    fontWeight: '500',
   },
-  copyrightText: {
-    fontSize: 10,
-    color: '#d1d5db',
-  },
-  // 企业选择器样式
   pickerOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'flex-end',
   },
   pickerContainer: {
-    backgroundColor: '#ffffff',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     maxHeight: '50%',
   },
   pickerHeader: {
@@ -518,40 +500,40 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: '#E7E8EE',
   },
   pickerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1f2937',
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#1A1A1A',
   },
   pickerClose: {
     fontSize: 20,
-    color: '#6b7280',
+    color: '#4B5563',
   },
   pickerItem: {
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: '#F3F4F6',
   },
   pickerItemSelected: {
-    backgroundColor: '#eff6ff',
+    backgroundColor: 'rgba(79, 142, 247, 0.08)',
   },
   pickerItemText: {
     fontSize: 16,
-    color: '#1f2937',
+    color: '#1A1A1A',
     marginBottom: 4,
   },
   pickerItemTextSelected: {
-    color: '#2563eb',
+    color: '#4F8EF7',
     fontWeight: '500',
   },
   pickerItemCode: {
-    fontSize: 12,
-    color: '#9ca3af',
+    fontSize: 14,
+    color: '#667085',
   },
 });
 

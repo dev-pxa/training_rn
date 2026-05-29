@@ -21,6 +21,12 @@ import SettingsIcon from './SettingsIcon';
 import CloudDownloadIcon from './CloudDownloadIcon';
 import ArrowRightIcon from './ArrowRightIcon';
 import VerifiedCheckIcon from './VerifiedCheckIcon';
+import UserIcon from './UserIcon';
+import LockIcon from './LockIcon';
+import ChevronDownIcon from './ChevronDownIcon';
+import CheckIcon from './CheckIcon';
+import XIcon from './XIcon';
+import LogoIcon from './LogoIcon';
 
 export type IconName =
   | 'Bell'
@@ -43,7 +49,13 @@ export type IconName =
   | 'Settings'
   | 'CloudDownload'
   | 'ArrowRight'
-  | 'VerifiedCheck';
+  | 'VerifiedCheck'
+  | 'User'
+  | 'Lock'
+  | 'ChevronDown'
+  | 'Check'
+  | 'X'
+  | 'Logo';
 
 interface IconProps {
   name: IconName;
@@ -82,6 +94,12 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   CloudDownload: CloudDownloadIcon,
   ArrowRight: ArrowRightIcon,
   VerifiedCheck: VerifiedCheckIcon,
+  User: UserIcon,
+  Lock: LockIcon,
+  ChevronDown: ChevronDownIcon,
+  Check: CheckIcon,
+  X: XIcon,
+  Logo: LogoIcon,
 };
 
 const Icon = ({ name, color, size, style, opacity }: IconProps) => {

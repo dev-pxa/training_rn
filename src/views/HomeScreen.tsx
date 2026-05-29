@@ -29,10 +29,10 @@ interface HomeScreenProps {
 
 /** 底部 Tab 配置 */
 const HOME_TABS: TabItem[] = [
-  { key: 'Home', label: '首页', iconName: 'Home' },
-  { key: 'Learn', label: '学习', iconName: 'Learn' },
-  { key: 'Exam', label: '考试', iconName: 'Exam' },
-  { key: 'Profile', label: '我的', iconName: 'Profile' },
+  { key: 'home', label: '首页', iconName: 'Home' },
+  { key: 'learn', label: '学习', iconName: 'Learn' },
+  { key: 'exam', label: '考试', iconName: 'Exam' },
+  { key: 'profile', label: '我的', iconName: 'Profile' },
 ];
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
@@ -233,7 +233,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       </ScrollView>
 
       {/* 底部导航栏 */}
-      <BottomTabBar tabs={tabsWithHandlers} activeKey="Home" />
+      <BottomTabBar tabs={tabsWithHandlers} activeKey="home" />
     </SafeAreaView>
   );
 };
