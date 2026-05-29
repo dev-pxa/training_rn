@@ -3,26 +3,28 @@ import { View, Image, TouchableOpacity, FlatList, Dimensions } from 'react-nativ
 import styles from './styles';
 
 export interface CarouselItem {
+  id: string;
   imageUrl: string;
   jumpUrl: string;
 }
 
 interface CarouselProps {
-  data: CarouselItem[];
   interval?: number;
+  items: CarouselItem[];
+  onPress?: (jumpUrl: string) => void;
 }
 
 const { width: screenWidth } = Dimensions.get('window');
 
-const Carousel = ({ data, interval = 3 }: CarouselProps) => {
+const Carousel = ({ items, interval = 3, onPress }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (data.length > 1) {
+    if (items.length > 1) {
       timerRef.current = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % data.length);
+        setCurrentIndex((prev) => (prev + 1) % items.length);
       }, interval * 1000);
     }
 
@@ -31,20 +33,21 @@ const Carousel = ({ data, interval = 3 }: CarouselProps) => {
         clearInterval(timerRef.current);
       }
     };
-  }, [data.length, interval]);
+  }, [items.length, interval]);
 
   useEffect(() => {
-    if (flatListRef.current && data.length > 0) {
+    if (flatListRef.current && items.length > 0) {
       flatListRef.current.scrollToIndex({
         index: currentIndex,
         animated: true,
       });
     }
-  }, [currentIndex, data.length]);
+  }, [currentIndex, items.length]);
 
   const handleImagePress = (jumpUrl: string) => {
-    // TODO 跳转
-    console.log('跳转 URL:', jumpUrl);
+    if (onPress) {
+      onPress(jumpUrl);
+    }
   };
 
   const renderItem = ({ item }: { item: CarouselItem }) => (
@@ -63,19 +66,19 @@ const Carousel = ({ data, interval = 3 }: CarouselProps) => {
 
   const renderIndicator = () => (
     <View style={styles.indicatorContainer}>
-      {data.map((_, index) => (
+      {items.map((_, index) => (
         <View
           key={index}
           style={[
             styles.indicator,
-            { backgroundColor: index === currentIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)' },
+            index === currentIndex ? styles.indicatorActive : null,
           ]}
         />
       ))}
     </View>
   );
 
-  if (data.length === 0) {
+  if (items.length === 0) {
     return null;
   }
 
@@ -83,9 +86,9 @@ const Carousel = ({ data, interval = 3 }: CarouselProps) => {
     <View style={styles.container}>
       <FlatList
         ref={flatListRef}
-        data={data}
+        data={items}
         renderItem={renderItem}
-        keyExtractor={(item, index) => `${index}-${item.imageUrl}`}
+        keyExtractor={(item) => item.id}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
@@ -95,7 +98,7 @@ const Carousel = ({ data, interval = 3 }: CarouselProps) => {
           setCurrentIndex(index);
         }}
       />
-      {data.length > 1 && renderIndicator()}
+      {items.length > 1 && renderIndicator()}
     </View>
   );
 };

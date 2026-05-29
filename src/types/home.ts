@@ -84,7 +84,7 @@ export interface HomeResponse {
   /** 响应状态码 */
   code: number;
   /** 响应消息 */
-  message: string;
+  desc: string;
   /** 响应数据 */
   data: {
     /** 轮播图配置 */

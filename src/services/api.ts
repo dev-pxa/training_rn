@@ -1,9 +1,7 @@
 import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
 import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay } from './mock';
-
-// API 基础配置
-const API_BASE_URL = 'https://api.example.com/v1';
+import { API_BASE_URL, API_PATH_PREFIX } from './environment';
 
 // 获取首页数据
 export async function fetchHomeData(): Promise<HomeResponse> {
@@ -11,7 +9,7 @@ export async function fetchHomeData(): Promise<HomeResponse> {
     return mockDelay(mockHomeData);
   }
 
-  const response = await fetch(`${API_BASE_URL}/home`, {
+  const response = await fetch(`${API_BASE_URL}${API_PATH_PREFIX}/home`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -29,11 +27,19 @@ export async function fetchLoginConfig(): Promise<LoginConfigResponse> {
     return mockDelay(mockLoginConfig);
   }
 
-  const response = await fetch(`${API_BASE_URL}/login/config`);
+  const response = await fetch(`${API_BASE_URL}${API_PATH_PREFIX}/login/config`);
   if (!response.ok) {
     throw new Error('获取登录配置失败');
   }
-  return response.json();
+  
+  const result = await response.json();
+  
+  // 接口返回格式为 {code, des, data}
+  if (result.code !== 0) {
+    throw new Error(result.des || '获取登录配置失败');
+  }
+  
+  return result;
 }
 
 // 登录接口
@@ -42,7 +48,7 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
     return mockDelay(mockLogin(request));
   }
 
-  const response = await fetch(`${API_BASE_URL}/login`, {
+  const response = await fetch(`${API_BASE_URL}${API_PATH_PREFIX}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -32,13 +32,26 @@ export interface Agreement {
   };
 }
 
-/** 登录页配置接口响应 */
-export interface LoginConfigResponse {
+/** API 通用响应包装 */
+export interface ApiResponse<T> {
+  /** 状态码，0 表示成功 */
+  code: number;
+  /** 描述信息 */
+  des: string;
+  /** 数据 */
+  data: T;
+}
+
+/** 登录页配置数据 */
+export interface LoginConfigData {
   /** 企业列表 */
   companies: Company[];
   /** 协议信息 */
   agreements: Agreement;
 }
+
+/** 登录页配置接口响应 */
+export interface LoginConfigResponse extends ApiResponse<LoginConfigData> {}
 
 /** 登录请求参数 */
 export interface LoginRequest {

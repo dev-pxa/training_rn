@@ -1,52 +1,56 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Course, CourseType } from '../../types/home';
+import Icon from '../Icons/Icon';
 import styles from './styles';
 
 interface CourseCardProps {
   course: Course;
   onPress?: (jumpUrl: string) => void;
-  index?: number;
 }
 
-const getGradientColors = (index: number = 0): string[] => {
-  const gradients = [
-    ['#11998E', '#38EF7D'],
-    ['#667EEA', '#764BA2'],
-    ['#F093FB', '#F5576C'],
-    ['#4FACFE', '#00F2FE'],
-  ];
-  return gradients[index % gradients.length];
-};
-
-const getCourseEmoji = (type: CourseType): string => {
-  return type === 'series' ? '👷' : '🔧';
-};
-
-const CourseCard: React.FC<CourseCardProps> = ({ course, onPress, index = 0 }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ course, onPress }) => {
   const handlePress = () => {
     if (onPress) {
       onPress(course.jumpUrl);
     }
   };
 
+  const getDurationIcon = (type: CourseType) => {
+    return type === 'series' ? 'Book' : 'Clock';
+  };
+
   return (
     <TouchableOpacity
       style={styles.courseCard}
-      activeOpacity={0.8}
+      activeOpacity={0.9}
       onPress={handlePress}
     >
-      <LinearGradient
-        colors={getGradientColors(index)}
-        style={styles.courseThumbnail}
-      >
-        <Text style={styles.courseEmoji}>{getCourseEmoji(course.type)}</Text>
-      </LinearGradient>
-      <Text style={styles.courseTitle} numberOfLines={2}>
-        {course.title}
-      </Text>
-      <Text style={styles.courseMeta}>{course.duration}</Text>
+      <View style={styles.coverWrapper}>
+        <Image
+          source={{ uri: course.coverImage }}
+          style={styles.coverImage}
+          resizeMode="cover"
+        />
+        {course.label && (
+          <LinearGradient
+            colors={['#4F8EF7', '#7C6EFC']}
+            style={styles.courseLabel}
+          >
+            <Text style={styles.courseLabelText}>{course.label}</Text>
+          </LinearGradient>
+        )}
+        <View style={styles.durationWrapper}>
+          <Icon name={getDurationIcon(course.type)} size={12} color="#FFFFFF" />
+          <Text style={styles.durationText}>{course.duration}</Text>
+        </View>
+      </View>
+      <View style={styles.courseInfo}>
+        <Text style={styles.courseTitle} numberOfLines={2}>
+          {course.title}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };

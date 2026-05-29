@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
 import BottomTabBar, { TabItem } from '../../components/BottomTabBar';
 import CourseCard from '../../components/CourseCard';
+import Carousel from '../../components/Carousel';
 import { fetchHomeData } from '../../services/api';
 import { HomeResponse, CourseModule } from '../../types/home';
 import { RootStackParamList } from '../../types/navigation';
-import { Icon } from '../../components/Icons';
+import { useFetchData } from '../../hooks/useFetchData';
 import styles from './styles';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -35,34 +35,35 @@ const HOME_TABS: TabItem[] = [
   { key: 'profile', label: '我的', iconName: 'Profile' },
 ];
 
+/** 轮播图数据 */
+const BANNER_DATA = {
+  interval: 3,
+  items: [
+    {
+      id: 'banner_001',
+      imageUrl: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/03d7492f51664383a7f9fe8bb5904a46.jpg',
+      jumpUrl: 'https://example.com/banner1',
+    },
+    {
+      id: 'banner_002',
+      imageUrl: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
+      jumpUrl: 'https://example.com/banner2',
+    },
+    {
+      id: 'banner_003',
+      imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600',
+      jumpUrl: 'https://example.com/banner3',
+    },
+  ],
+};
+
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  /** 加载状态 */
-  const [loading, setLoading] = useState(true);
-  /** 错误信息 */
-  const [error, setError] = useState<string | null>(null);
-  /** 首页数据 */
-  const [homeData, setHomeData] = useState<HomeResponse['data'] | null>(null);
+  const { data: homeData, loading, error, fetchData } = useFetchData<HomeResponse['data']>();
 
   /** 组件挂载时加载首页数据 */
   useEffect(() => {
-    const loadHomeData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await fetchHomeData();
-        if (response.code === 200) {
-          setHomeData(response.data);
-        } else {
-          setError(response.message || '获取数据失败');
-        }
-      } catch (err) {
-        setError('网络请求失败');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadHomeData();
+    fetchData(fetchHomeData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** 点击课程卡片处理 */
@@ -75,104 +76,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     console.log('跳转模块:', link);
   };
 
+  /** 点击轮播图处理 */
+  const handleBannerPress = (jumpUrl: string) => {
+    console.log('跳转Banner:', jumpUrl);
+  };
+
   /** 点击 Tab 处理 */
   const handleTabPress = (tabKey: string) => {
     console.log('切换 Tab:', tabKey);
     if (tabKey === 'profile') {
       navigation.navigate('Profile');
     }
-  };
-
-  /** 渲染用户头像 */
-  const renderAvatar = () => (
-    <LinearGradient
-      colors={['#4F8EF7', '#7C6EFC']}
-      style={styles.avatar}
-    >
-      <Text style={styles.avatarText}>张</Text>
-    </LinearGradient>
-  );
-
-  /** 渲染Hero Card继续学习模块 */
-  const renderHeroCard = () => {
-    if (!homeData?.continueLearning?.course) {
-      return null;
-    }
-
-    const { course } = homeData.continueLearning;
-
-    return (
-      <TouchableOpacity
-        style={styles.heroCard}
-        activeOpacity={0.8}
-        onPress={() => handleCoursePress(course.jumpUrl)}
-      >
-        <View style={styles.heroContent}>
-          <View style={styles.heroText}>
-            <Text style={styles.heroTitle}>继续学习</Text>
-            <Text style={styles.heroSubtitle}>上次看到 {course.progress}%</Text>
-            <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${course.progress}%` }]} />
-            </View>
-          </View>
-          <LinearGradient
-            colors={['#667EEA', '#764BA2']}
-            style={styles.heroThumbnail}
-          >
-            <Text style={styles.heroEmoji}>🎓</Text>
-          </LinearGradient>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  /** 渲染继续学习模块 */
-  const renderContinueLearning = () => {
-    if (!homeData?.continueLearning?.course) {
-      return null;
-    }
-
-    const { sectionTitle, sectionLink, course } = homeData.continueLearning;
-
-    return (
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>{sectionTitle}</Text>
-          <TouchableOpacity onPress={() => handleModuleLinkPress(sectionLink)}>
-            <Text style={styles.sectionLink}>全部历史</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.continueCard}
-          activeOpacity={0.8}
-          onPress={() => handleCoursePress(course.jumpUrl)}
-        >
-          <LinearGradient
-            colors={['#11998E', '#38EF7D']}
-            style={styles.continueThumb}
-          >
-            <Text style={styles.continueEmoji}>🎓</Text>
-          </LinearGradient>
-          <View style={styles.continueContent}>
-            <View>
-              <Text style={styles.continueTitle} numberOfLines={2}>{course.title}</Text>
-              <Text style={styles.continueMeta}>上次看到 · 12分钟</Text>
-            </View>
-            <View style={styles.continueProgress}>
-              <View style={styles.miniProgress}>
-                <View style={[styles.miniProgressFill, { width: `${course.progress}%` }]} />
-              </View>
-              <LinearGradient
-                colors={['#4F8EF7', '#7C6EFC']}
-                style={styles.playBtn}
-              >
-                <Icon name="Play" size={16} color="#FFFFFF" />
-              </LinearGradient>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
   };
 
   /** 渲染课程模块 */
@@ -185,12 +99,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.courseGrid}>
-        {module.courses.map((course, index) => (
+        {module.courses.map((course) => (
           <CourseCard
             key={course.id}
             course={course}
             onPress={handleCoursePress}
-            index={index}
           />
         ))}
       </View>
@@ -219,20 +132,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Text style={styles.errorText}>{error || '数据加载失败'}</Text>
           <TouchableOpacity
             style={styles.retryButton}
-            onPress={() => {
-              setLoading(true);
-              fetchHomeData()
-                .then((res) => {
-                  if (res.code === 200) {
-                    setHomeData(res.data);
-                    setError(null);
-                  } else {
-                    setError(res.message);
-                  }
-                })
-                .catch(() => setError('网络请求失败'))
-                .finally(() => setLoading(false));
-            }}
+            onPress={() => fetchData(fetchHomeData)}
           >
             <Text style={styles.retryButtonText}>重试</Text>
           </TouchableOpacity>
@@ -258,14 +158,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Text style={styles.greetingSubtitle}>欢迎回来，</Text>
             <Text style={styles.userName}>张小智</Text>
           </View>
-          {renderAvatar()}
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>张</Text>
+          </View>
         </View>
 
-        {/* Hero Card 继续学习 */}
-        {renderHeroCard()}
-
-        {/* 继续学习模块 */}
-        {renderContinueLearning()}
+        {/* 轮播图 */}
+        <Carousel
+          interval={homeData.carousel.interval}
+          items={homeData.carousel.items}
+          onPress={handleBannerPress}
+        />
 
         {/* 课程模块列表 */}
         {homeData.courseModules.map(renderCourseModule)}

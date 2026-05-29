@@ -29,6 +29,7 @@ import XIcon from './XIcon';
 import LogoIcon from './LogoIcon';
 import EyeIcon from './EyeIcon';
 import PlusIcon from './PlusIcon';
+import BookIcon from './BookIcon';
 
 export type IconName =
   | 'Bell'
@@ -59,7 +60,8 @@ export type IconName =
   | 'X'
   | 'Logo'
   | 'Eye'
-  | 'Plus';
+  | 'Plus'
+  | 'Book';
 
 interface IconProps {
   name: IconName;
@@ -106,6 +108,7 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Logo: LogoIcon,
   Eye: EyeIcon,
   Plus: PlusIcon,
+  Book: BookIcon,
 };
 
 const Icon = ({ name, color, size, style, opacity }: IconProps) => {

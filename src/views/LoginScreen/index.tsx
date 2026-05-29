@@ -50,10 +50,11 @@ function LoginScreen({ navigation }: LoginScreenProps) {
   const loadConfig = async () => {
     try {
       const config = await fetchLoginConfig();
-      setCompanies(config.companies);
-      setAgreements(config.agreements);
-      if (config.companies.length > 0) {
-        setSelectedCompany(config.companies[0]);
+      // 接口返回格式为 {code, des, data}
+      setCompanies(config.data.companies);
+      setAgreements(config.data.agreements);
+      if (config.data.companies.length > 0) {
+        setSelectedCompany(config.data.companies[0]);
       }
     } catch (error) {
       Alert.alert('错误', '获取登录配置失败，请重试');
