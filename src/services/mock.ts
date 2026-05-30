@@ -1,5 +1,6 @@
 import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
+import { ProfileResponse } from '../types/profile';
 
 // Mock 开关 - 设置为 false 可移除 mock
 export const USE_MOCK = false;
@@ -237,4 +238,64 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
   }
   await delay(MOCK_DELAY);
   return mockLogin(request);
+}
+
+// Mock 个人中心数据
+export const mockProfileData: ProfileResponse = {
+  code: 0,
+  desc: '查询成功',
+  data: {
+    stats: [
+      {
+        value: '1260',
+        label: '累计学习时长(分钟)',
+        type: 'studyMinutes',
+      },
+      {
+        value: '5',
+        label: '获得证书',
+        type: 'certificate',
+      },
+      {
+        value: '8/156',
+        label: '学习排名',
+        type: 'ranking',
+      },
+    ],
+    recentLearning: [
+      {
+        id: '1',
+        courseName: '智慧安防：2024传感器安装规范',
+        coverImage: 'https://example.com/cover1.jpg',
+        lastWatched: '12分钟前',
+        progress: 65,
+        jumpUrl: '/course/1',
+      },
+      {
+        id: '2',
+        courseName: '云端协同方案实操视频',
+        coverImage: 'https://example.com/cover2.jpg',
+        lastWatched: '2小时前',
+        progress: 30,
+        jumpUrl: '/course/2',
+      },
+      {
+        id: '3',
+        courseName: '工业网关部署规范',
+        coverImage: 'https://example.com/cover3.jpg',
+        lastWatched: '昨天',
+        progress: 100,
+        jumpUrl: '/course/3',
+      },
+    ],
+  },
+};
+
+// 获取个人中心数据
+export async function fetchProfile(): Promise<ProfileResponse> {
+  if (!USE_MOCK) {
+    throw new Error('Mock is disabled');
+  }
+  await delay(MOCK_DELAY);
+  return mockProfileData;
 }

@@ -13,6 +13,7 @@ import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import BottomTabBar, { TabItem } from '../../components/BottomTabBar';
 import CourseCard from '../../components/CourseCard';
+import ErrorState from '../../components/ErrorState';
 import { RootStackParamList } from '../../types/navigation';
 import { Course } from '../../types/home';
 import { CourseCategory, CategoryTab, CourseListResponse } from '../../types/courseList';
@@ -131,15 +132,11 @@ const CourseListScreen: React.FC<CourseListScreenProps> = ({ navigation, route }
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error || '数据加载失败'}</Text>
-          <TouchableOpacity
-            style={styles.retryButton}
-            onPress={() => fetchData(() => fetchCourseList(activeCategory))}
-          >
-            <Text style={styles.retryButtonText}>重试</Text>
-          </TouchableOpacity>
-        </View>
+        <ErrorState
+          message={error || '数据加载失败'}
+          onRetry={() => fetchData(() => fetchCourseList(activeCategory))}
+          onGoHome={() => navigation.navigate('Home')}
+        />
       </SafeAreaView>
     );
   }

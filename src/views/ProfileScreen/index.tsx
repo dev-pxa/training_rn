@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   ScrollView,
   StatusBar,
   TouchableOpacity,
+  ActivityIndicator,
+  Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import BottomTabBar, { TabItem } from '../../components/BottomTabBar';
+import ErrorState from '../../components/ErrorState';
 import { RootStackParamList } from '../../types/navigation';
 import { Icon } from '../../components/Icons';
+import { fetchProfile } from '../../services/api';
+import { useFetchData } from '../../hooks/useFetchData';
+import { ProfileResponse, RecentLearningItem, StatsItem } from '../../types/profile';
 import styles from './styles';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
@@ -31,31 +37,17 @@ const PROFILE_TABS: TabItem[] = [
   { key: 'profile', label: '我的', iconName: 'Profile' },
 ];
 
-/** 学习记录数据 */
-const LEARNING_HISTORY = [
-  {
-    id: 1,
-    courseName: '智慧安防：2024传感器安装规范',
-    lastWatched: '12分钟前',
-    emoji: '🎓',
-  },
-  {
-    id: 2,
-    courseName: '云端协同方案实操视频',
-    lastWatched: '2小时前',
-    emoji: '🔧',
-  },
-  {
-    id: 3,
-    courseName: '工业网关部署规范',
-    lastWatched: '昨天',
-    emoji: '👷',
-  },
-];
-
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   /** 当前激活的 Tab */
   const [activeTab, setActiveTab] = useState('profile');
+
+  /** 获取个人中心数据 */
+  const { data: profileData, loading, error, fetchData } = useFetchData<ProfileResponse['data']>();
+
+  /** 组件挂载时加载数据 */
+  useEffect(() => {
+    fetchData(fetchProfile);
+  }, [fetchData]);
 
   /** Tab 点击处理 */
   const handleTabPress = (tabKey: string) => {
@@ -66,17 +58,28 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     }
   };
 
+  /** 点击课程处理 */
+  const handleCoursePress = (jumpUrl: string) => {
+    console.log('跳转课程:', jumpUrl);
+  };
+
+  /** 渲染统计项 */
+  const renderStatItem = (stat: StatsItem, index: number) => (
+    <View key={`stat-${index}`} style={styles.statItem}>
+      <Text style={styles.statValue}>{stat.value}</Text>
+      <Text style={styles.statLabel}>{stat.label}</Text>
+    </View>
+  );
+
   /** 渲染学习记录 */
-  const renderLearningRecord = (record: typeof LEARNING_HISTORY[0]) => (
-    <TouchableOpacity key={record.id} style={styles.learningRecordItem} activeOpacity={0.7}>
-      <LinearGradient
-        colors={['#667EEA', '#764BA2']}
-        style={styles.learningThumbnail}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
-        <Text style={styles.learningEmoji}>{record.emoji}</Text>
-      </LinearGradient>
+  const renderLearningRecord = (record: RecentLearningItem) => (
+    <TouchableOpacity
+      key={record.id}
+      style={styles.learningRecordItem}
+      activeOpacity={0.7}
+      onPress={() => handleCoursePress(record.jumpUrl)}
+    >
+      <Image source={{ uri: record.coverImage }} style={styles.learningThumbnail} resizeMode="cover" />
       <View style={styles.learningInfo}>
         <Text style={styles.learningCourseName} numberOfLines={1}>
           {record.courseName}
@@ -95,9 +98,37 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     onPress: () => handleTabPress(tab.key),
   }));
 
+  /** 渲染加载状态 */
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4F8EF7" />
+          <Text style={styles.loadingText}>加载中...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  /** 渲染错误状态 */
+  if (error || !profileData) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+        <ErrorState
+          message={error || '数据加载失败'}
+          onRetry={() => fetchData(fetchProfile)}
+        />
+        {/* 底部导航栏 */}
+      <BottomTabBar tabs={tabsWithHandlers} activeKey="profile" />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8F9FB" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* 头部信息 */}
@@ -126,25 +157,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         {/* 数据看板 */}
         <View style={styles.statsCard}>
           <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>126</Text>
-              <Text style={styles.statLabel}>累计学习时长</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>5</Text>
-              <Text style={styles.statLabel}>获得证书</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>82</Text>
-              <Text style={styles.statLabel}>完成率</Text>
-            </View>
+            {profileData.stats.map((stat, index) => renderStatItem(stat, index))}
           </View>
         </View>
 
         {/* 学习历史 */}
         <Text style={styles.sectionTitle}>最近学习记录</Text>
         <View style={styles.recentList}>
-          {LEARNING_HISTORY.map(renderLearningRecord)}
+          {profileData.recentLearning.map(renderLearningRecord)}
         </View>
 
         {/* 设置入口 */}

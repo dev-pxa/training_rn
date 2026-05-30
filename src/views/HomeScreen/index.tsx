@@ -13,6 +13,7 @@ import { RouteProp } from '@react-navigation/native';
 import BottomTabBar, { TabItem } from '../../components/BottomTabBar';
 import CourseCard from '../../components/CourseCard';
 import Carousel from '../../components/Carousel';
+import ErrorState from '../../components/ErrorState';
 import { fetchHomeData } from '../../services/api';
 import { HomeResponse, CourseModule } from '../../types/home';
 import { RootStackParamList } from '../../types/navigation';
@@ -109,15 +110,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error || '数据加载失败'}</Text>
-          <TouchableOpacity
-            style={styles.retryButton}
-            onPress={() => fetchData(fetchHomeData)}
-          >
-            <Text style={styles.retryButtonText}>重试</Text>
-          </TouchableOpacity>
-        </View>
+        <ErrorState
+          message={error || '数据加载失败'}
+          onRetry={() => fetchData(fetchHomeData)}
+        />
       </SafeAreaView>
     );
   }

@@ -19,7 +19,7 @@ const API_DOMAINS: Record<Environment, string> = {
 export const API_BASE_URL = API_DOMAINS[ENV];
 
 // API 路径前缀
-export const API_PATH_PREFIX = '/api';
+export const API_PATH_PREFIX = '/api/app';
 
 // 完整的 API 基础路径
 export const FULL_API_BASE_URL = `${API_BASE_URL}${API_PATH_PREFIX}`;

@@ -32,6 +32,7 @@ import PlusIcon from './PlusIcon';
 import BookIcon from './BookIcon';
 import BackIcon from './BackIcon';
 import ArrowDownIcon from './ArrowDownIcon';
+import RefreshIcon from './RefreshIcon';
 
 export type IconName =
   | 'Bell'
@@ -65,7 +66,8 @@ export type IconName =
   | 'Plus'
   | 'Book'
   | 'Back'
-  | 'ArrowDown';
+  | 'ArrowDown'
+  | 'Refresh';
 
 interface IconProps {
   name: IconName;
@@ -115,6 +117,7 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Book: BookIcon,
   Back: BackIcon,
   ArrowDown: ArrowDownIcon,
+  Refresh: RefreshIcon,
 };
 
 const Icon = ({ name, color, size, style, opacity }: IconProps) => {
