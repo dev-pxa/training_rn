@@ -6,14 +6,9 @@ import LoginScreen from '../views/LoginScreen';
 import RegisterScreen from '../views/RegisterScreen';
 import HomeScreen from '../views/HomeScreen';
 import ProfileScreen from '../views/ProfileScreen';
+import CourseListScreen from '../views/CourseListScreen';
 import { isLoggedIn } from '../services/storage';
-
-export type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-  Home: undefined;
-  Profile: undefined;
-};
+import { RootStackParamList } from '../types/navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -34,6 +29,7 @@ function AppNavigator() {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="CourseList" component={CourseListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

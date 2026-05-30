@@ -27,5 +27,7 @@ export { default as XIcon } from './XIcon';
 export { default as LogoIcon } from './LogoIcon';
 export { default as EyeIcon } from './EyeIcon';
 export { default as PlusIcon } from './PlusIcon';
+export { default as BackIcon } from './BackIcon';
+export { default as ArrowDownIcon } from './ArrowDownIcon';
 export { default as Icon } from './Icon';
 export type { IconName } from './Icon';

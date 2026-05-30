@@ -30,6 +30,8 @@ import LogoIcon from './LogoIcon';
 import EyeIcon from './EyeIcon';
 import PlusIcon from './PlusIcon';
 import BookIcon from './BookIcon';
+import BackIcon from './BackIcon';
+import ArrowDownIcon from './ArrowDownIcon';
 
 export type IconName =
   | 'Bell'
@@ -61,7 +63,9 @@ export type IconName =
   | 'Logo'
   | 'Eye'
   | 'Plus'
-  | 'Book';
+  | 'Book'
+  | 'Back'
+  | 'ArrowDown';
 
 interface IconProps {
   name: IconName;
@@ -109,6 +113,8 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Eye: EyeIcon,
   Plus: PlusIcon,
   Book: BookIcon,
+  Back: BackIcon,
+  ArrowDown: ArrowDownIcon,
 };
 
 const Icon = ({ name, color, size, style, opacity }: IconProps) => {

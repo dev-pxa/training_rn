@@ -35,28 +35,6 @@ const HOME_TABS: TabItem[] = [
   { key: 'profile', label: '我的', iconName: 'Profile' },
 ];
 
-/** 轮播图数据 */
-const BANNER_DATA = {
-  interval: 3,
-  items: [
-    {
-      id: 'banner_001',
-      imageUrl: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/03d7492f51664383a7f9fe8bb5904a46.jpg',
-      jumpUrl: 'https://example.com/banner1',
-    },
-    {
-      id: 'banner_002',
-      imageUrl: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/097af12357444a9b84fb1d8a89b1b65d.jpg',
-      jumpUrl: 'https://example.com/banner2',
-    },
-    {
-      id: 'banner_003',
-      imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600',
-      jumpUrl: 'https://example.com/banner3',
-    },
-  ],
-};
-
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { data: homeData, loading, error, fetchData } = useFetchData<HomeResponse['data']>();
 
@@ -72,8 +50,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   /** 点击模块链接处理 */
-  const handleModuleLinkPress = (link: string) => {
-    console.log('跳转模块:', link);
+  const handleModuleLinkPress = (_link: string, moduleType: 'required' | 'certificate') => {
+    navigation.navigate('CourseList', { category: moduleType });
   };
 
   /** 点击轮播图处理 */
@@ -83,8 +61,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   /** 点击 Tab 处理 */
   const handleTabPress = (tabKey: string) => {
-    console.log('切换 Tab:', tabKey);
-    if (tabKey === 'profile') {
+    if (tabKey === 'home') {
+      // 已经在首页了
+    } else if (tabKey === 'learn') {
+      navigation.navigate('CourseList', { category: 'all' });
+    } else if (tabKey === 'profile') {
       navigation.navigate('Profile');
     }
   };
@@ -94,7 +75,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <View key={module.moduleType} style={styles.section}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{module.sectionTitle}</Text>
-        <TouchableOpacity onPress={() => handleModuleLinkPress(module.sectionLink)}>
+        <TouchableOpacity onPress={() => handleModuleLinkPress(module.sectionLink, module.moduleType)}>
           <Text style={styles.sectionLink}>查看全部</Text>
         </TouchableOpacity>
       </View>

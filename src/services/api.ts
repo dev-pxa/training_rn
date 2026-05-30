@@ -1,5 +1,6 @@
 import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
+import { CourseListResponse } from '../types/courseList';
 import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay } from './mock';
 import { API_BASE_URL, API_PATH_PREFIX } from './environment';
 
@@ -60,4 +61,36 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
     throw new Error('登录失败');
   }
   return response.json();
+}
+
+// 获取课程列表
+export async function fetchCourseList(type?: string): Promise<CourseListResponse> {
+  if (USE_MOCK) {
+    // TODO: 添加 mock 数据
+    throw new Error('Mock not implemented');
+  }
+
+  const url = new URL(`${API_BASE_URL}${API_PATH_PREFIX}/app/courses`);
+  if (type && type !== 'all') {
+    url.searchParams.append('type', type);
+  }
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('获取课程列表失败');
+  }
+
+  const result = await response.json();
+
+  // 接口返回格式为 {code, desc, data}
+  if (result.code !== 0) {
+    throw new Error(result.des || '获取课程列表失败');
+  }
+
+  return result;
 }
