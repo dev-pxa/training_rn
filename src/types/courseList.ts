@@ -20,6 +20,6 @@ export interface CourseListResponse {
   /** 响应数据 */
   data: {
     /** 课程列表 */
-    courses: Course[];
+    list: Course[];
   };
 }

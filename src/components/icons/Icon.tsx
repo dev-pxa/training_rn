@@ -33,6 +33,11 @@ import BookIcon from './BookIcon';
 import BackIcon from './BackIcon';
 import ArrowDownIcon from './ArrowDownIcon';
 import RefreshIcon from './RefreshIcon';
+import SkipPrevIcon from './SkipPrevIcon';
+import SkipNextIcon from './SkipNextIcon';
+import MaximizeIcon from './MaximizeIcon';
+import ShareIcon from './ShareIcon';
+import PauseIcon from './PauseIcon';
 
 export type IconName =
   | 'Bell'
@@ -41,6 +46,7 @@ export type IconName =
   | 'Cup'
   | 'Medal'
   | 'Play'
+  | 'Pause'
   | 'Clock'
   | 'Collection'
   | 'Home'
@@ -67,7 +73,11 @@ export type IconName =
   | 'Book'
   | 'Back'
   | 'ArrowDown'
-  | 'Refresh';
+  | 'Refresh'
+  | 'SkipPrev'
+  | 'SkipNext'
+  | 'Maximize'
+  | 'Share';
 
 interface IconProps {
   name: IconName;
@@ -91,6 +101,7 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Cup: CupIcon,
   Medal: MedalIcon,
   Play: PlayIcon,
+  Pause: PauseIcon,
   Clock: ClockIcon,
   Collection: CollectionIcon,
   Home: HomeIcon,
@@ -118,6 +129,10 @@ const IconMap: Record<IconName, React.FC<BaseIconProps>> = {
   Back: BackIcon,
   ArrowDown: ArrowDownIcon,
   Refresh: RefreshIcon,
+  SkipPrev: SkipPrevIcon,
+  SkipNext: SkipNextIcon,
+  Maximize: MaximizeIcon,
+  Share: ShareIcon,
 };
 
 const Icon = ({ name, color, size, style, opacity }: IconProps) => {

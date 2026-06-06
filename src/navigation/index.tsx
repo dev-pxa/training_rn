@@ -7,19 +7,18 @@ import RegisterScreen from '../views/RegisterScreen';
 import HomeScreen from '../views/HomeScreen';
 import ProfileScreen from '../views/ProfileScreen';
 import CourseListScreen from '../views/CourseListScreen';
+import CoursePlayerScreen from '../views/CoursePlayerScreen';
 import { isLoggedIn } from '../services/storage';
 import { RootStackParamList } from '../types/navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppNavigator() {
-  const initialRouteName: keyof RootStackParamList = isLoggedIn() ? 'Home' : 'Login';
-
   return (
     <NavigationContainer>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <Stack.Navigator
-        initialRouteName={'Login'}
+        initialRouteName={isLoggedIn() ? 'Home' : 'Login'}
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
@@ -30,6 +29,7 @@ function AppNavigator() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="CourseList" component={CourseListScreen} />
+        <Stack.Screen name="CoursePlayer" component={CoursePlayerScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -15,7 +15,7 @@ import CourseCard from '../../components/CourseCard';
 import Carousel from '../../components/Carousel';
 import ErrorState from '../../components/ErrorState';
 import { fetchHomeData } from '../../services/api';
-import { HomeResponse, CourseModule } from '../../types/home';
+import { HomeResponse, CourseModule, Course } from '../../types/home';
 import { RootStackParamList } from '../../types/navigation';
 import { useFetchData } from '../../hooks/useFetchData';
 import styles from './styles';
@@ -46,8 +46,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, []);
 
   /** 点击课程卡片处理 */
-  const handleCoursePress = (jumpUrl: string) => {
-    console.log('跳转课程:', jumpUrl);
+  const handleCoursePress = (course: Course) => {
+    navigation.navigate('CoursePlayer', { courseId: course.id });
   };
 
   /** 点击模块链接处理 */

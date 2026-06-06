@@ -7,13 +7,13 @@ import styles from './styles';
 
 interface CourseCardProps {
   course: Course;
-  onPress?: (jumpUrl: string) => void;
+  onPress?: (course: Course) => void;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, onPress }) => {
   const handlePress = () => {
     if (onPress) {
-      onPress(course.jumpUrl);
+      onPress(course);
     }
   };
 

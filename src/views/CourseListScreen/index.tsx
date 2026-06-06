@@ -57,8 +57,8 @@ const CourseListScreen: React.FC<CourseListScreenProps> = ({ navigation, route }
 
   /** 获取课程列表数据 */
   const { data, loading, error, fetchData } = useFetchData<{
-    list: never[]; courses: Course[] 
-}>();
+    list: Course[];
+  }>();
 
   /** 根据分类获取数据 */
   useEffect(() => {
@@ -66,8 +66,8 @@ const CourseListScreen: React.FC<CourseListScreenProps> = ({ navigation, route }
   }, [activeCategory, fetchData]);
 
   /** 点击课程卡片处理 */
-  const handleCoursePress = (jumpUrl: string) => {
-    console.log('跳转课程:', jumpUrl);
+  const handleCoursePress = (course: Course) => {
+    navigation.navigate('CoursePlayer', { courseId: course.id });
   };
 
   /** 点击分类标签处理 */
