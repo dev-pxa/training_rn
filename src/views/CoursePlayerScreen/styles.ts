@@ -4,9 +4,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8F9FB',
+    flexDirection: 'column',
   },
   scrollView: {
     flex: 1,
+  },
+  contentScrollView: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
   },
   playerSection: {
     position: 'relative',
@@ -185,6 +190,17 @@ const styles = StyleSheet.create({
   placeholderText: {
     fontSize: 14,
     color: '#8E8E93',
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F8F9FB',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#6B7280',
   },
 });
 

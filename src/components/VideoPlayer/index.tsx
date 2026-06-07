@@ -37,6 +37,10 @@ interface VideoPlayerProps {
   showBackButton?: boolean;
   /** 返回按钮点击回调 - 用户点击返回按钮时执行的操作 */
   onBackPress?: () => void;
+  /** 是否自动播放 - 视频加载完成后是否自动开始播放 */
+  autoPlay?: boolean;
+  /** 播放进度变化回调 - 当前播放时间变化时触发 */
+  onProgressChange?: (currentTime: number) => void;
 }
 
 /**
@@ -67,6 +71,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onFullscreenChange,
   showBackButton = false,
   onBackPress,
+  autoPlay = false,
+  onProgressChange,
 }) => {
   // ========== 状态定义 ==========
 
@@ -80,7 +86,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const savedTimeRef = useRef<number>(initialTime);
 
   /** 是否暂停播放 - 控制视频播放还是暂停的状态变量 */
-  const [paused, setPaused] = useState(true);
+  const [paused, setPaused] = useState(!autoPlay);
 
   /** 播放速率，1.0 表示正常速度 - 控制视频播放的快慢 */
   const [rate, setRate] = useState(1.0);
@@ -104,7 +110,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const rateBubbleModeRef = useRef<'normal' | 'fullscreen'>('normal');
 
   /** 是否显示中央播放按钮 - 控制屏幕中央的大播放按钮是否显示 */
-  const [showCenterPlay, setShowCenterPlay] = useState(true);
+  const [showCenterPlay, setShowCenterPlay] = useState(!autoPlay);
 
   /** 视频是否播放完毕 - 标记视频是否已经播放到结尾 */
   const [isEnded, setIsEnded] = useState(false);
@@ -163,15 +169,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   useEffect(() => {
     // 重置当前播放时间为新的初始时间
     setCurrentTime(initialTime);
-    // 暂停视频播放
-    setPaused(true);
-    // 显示中央播放按钮
-    setShowCenterPlay(true);
+    // 根据 autoPlay 决定是否暂停视频播放
+    setPaused(!autoPlay);
+    // 根据 autoPlay 决定是否显示中央播放按钮
+    setShowCenterPlay(!autoPlay);
     // 重置播放结束状态
     setIsEnded(false);
     // 保存初始时间到 ref 中
     savedTimeRef.current = initialTime;
-  }, [videoUrl, initialTime]);
+  }, [videoUrl, initialTime, autoPlay]);
 
   // ========== 全屏切换时恢复播放位置 ==========
 
@@ -297,8 +303,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!isFullscreen) {
       setCurrentTime(data.currentTime);
       savedTimeRef.current = data.currentTime;
+      onProgressChange?.(data.currentTime);
     }
-  }, [isFullscreen]);
+  }, [isFullscreen, onProgressChange]);
 
   /**
    * 全屏模式下的进度更新回调
@@ -309,8 +316,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (isFullscreen) {
       setCurrentTime(data.currentTime);
       savedTimeRef.current = data.currentTime;
+      onProgressChange?.(data.currentTime);
     }
-  }, [isFullscreen]);
+  }, [isFullscreen, onProgressChange]);
 
   /**
    * 视频加载完成回调 - 获取视频总时长，如果指定了初始播放时间则跳转
@@ -360,6 +368,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     // 如果当前是全屏状态，退出全屏，锁定为竖屏
     if (isFullscreen) {
       Orientation.lockToPortrait();
+      setShowRateBubble(false);
     } else {
       // 如果当前不是全屏状态，进入全屏，锁定为横屏
       Orientation.lockToLandscape();
@@ -373,7 +382,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     // 重置自动隐藏定时器
     resetHideControlsTimer();
-  }, [isFullscreen, currentTime, onFullscreenChange, resetHideControlsTimer]);
+  }, [isFullscreen, currentTime, setShowRateBubble,onFullscreenChange, resetHideControlsTimer]);
 
   /**
    * 处理返回按钮点击
@@ -512,19 +521,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       {/* 中央播放/重新播放按钮 - 显示条件：初始状态 OR (控制栏显示中且暂停) */}
       {(showCenterPlay || (showControls && paused)) && (
         <TouchableOpacity style={styles.playCenter} onPress={togglePlay}>
-          <LinearGradient
-            colors={['#4F8EF7', '#7C6EFC']}
-            style={styles.playBtn}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
+          <View style={styles.playBtn}>
             {/* 根据状态显示不同图标：播放结束显示重新播放图标，否则显示播放图标 */}
             {isEnded ? (
               <Icon name="Refresh" color="white" size={28} />
             ) : (
               <Icon name="Play" color="white" size={28} />
             )}
-          </LinearGradient>
+          </View>
         </TouchableOpacity>
       )}
 

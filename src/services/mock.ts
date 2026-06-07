@@ -1,6 +1,7 @@
 import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
 import { ProfileResponse } from '../types/profile';
+import { CourseDetailResponse, UpdatePlayProgressRequest, UpdatePlayProgressResponse } from '../types/coursePlayer';
 
 // Mock 开关 - 设置为 false 可移除 mock
 export const USE_MOCK = false;
@@ -298,4 +299,135 @@ export async function fetchProfile(): Promise<ProfileResponse> {
   }
   await delay(MOCK_DELAY);
   return mockProfileData;
+}
+
+// Mock 课程详情数据
+export const mockCourseDetailData: CourseDetailResponse = {
+  code: 0,
+  desc: '成功',
+  data: {
+    id: 1,
+    title: '2026款传感核心组件安装规范',
+    desc: '本节重点：红外传感器的防死角部署与盲点规避。',
+    "currentChapterIndex": 0,
+    chapters: [
+      {
+        id: 1,
+        index: '01',
+        name: '基础：传感器工作原理',
+        type: 'video',
+        spendTime: 1520,
+        status: 'playing',
+        url: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        initialTime: 60,
+      },
+      {
+        id: 2,
+        index: '02',
+        name: '部署：2026款硬件安装实操',
+        type: 'video',
+        spendTime: 72000,
+        status: 'completed',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        initialTime: 72000,
+      },
+      {
+        id: 3,
+        index: '03',
+        name: '部署：2026款硬件安装实操',
+        type: 'video',
+        spendTime: 72000,
+        status: 'completed',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        initialTime: 72000,
+      },
+      {
+        id: 4,
+        index: '04',
+        name: '进阶：多机联动信号补偿111',
+        type: 'video',
+        spendTime: 18000,
+        status: 'playing',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        initialTime: 0,
+      },
+      {
+        id: 5,
+        index: '05',
+        name: '进阶：多机联动信号补偿2222',
+        type: 'video',
+        spendTime: 18000,
+        status: 'playing',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        initialTime: 0,
+      },
+      {
+        id: 6,
+        index: '06',
+        name: '进阶：多机联动信号补偿3333',
+        type: 'video',
+        spendTime: 18000,
+        status: 'playing',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        initialTime: 0,
+      },
+      {
+        id: 7,
+        index: '07',
+        name: '进阶：多机联动信号补偿4444',
+        type: 'video',
+        spendTime: 18000,
+        status: 'playing',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        initialTime: 0,
+      },
+      {
+        id: 8,
+        index: '08',
+        name: '进阶：多机联动信号补偿5555',
+        type: 'video',
+        spendTime: 18000,
+        status: 'playing',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        initialTime: 0,
+      },
+      {
+        id: 9,
+        index: '09',
+        name: '结业考试',
+        type: 'test',
+        spendTime: 1800,
+        status: 'locked',
+        url: '',
+        initialTime: 0,
+      },
+    ],
+  },
+};
+
+// 获取课程详情
+export async function fetchCourseDetail(courseId: string): Promise<CourseDetailResponse> {
+  if (!USE_MOCK) {
+    throw new Error('Mock is disabled');
+  }
+  await delay(MOCK_DELAY);
+  console.log('fetchCourseDetail courseId:', courseId);
+  return mockCourseDetailData;
+}
+
+// Mock 更新播放进度响应
+export const mockUpdatePlayProgressResponse: UpdatePlayProgressResponse = {
+  code: 0,
+  desc: '更新成功',
+  data: null,
+};
+
+// 更新播放进度
+export async function updatePlayProgress(request: UpdatePlayProgressRequest): Promise<UpdatePlayProgressResponse> {
+  if (!USE_MOCK) {
+    throw new Error('Mock is disabled');
+  }
+  await delay(MOCK_DELAY);
+  console.log('updatePlayProgress:', request);
+  return mockUpdatePlayProgressResponse;
 }

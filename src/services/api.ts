@@ -2,7 +2,8 @@ import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
 import { CourseListResponse } from '../types/courseList';
 import { ProfileResponse } from '../types/profile';
-import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay, mockProfileData } from './mock';
+import { CourseDetailResponse, UpdatePlayProgressRequest, UpdatePlayProgressResponse } from '../types/coursePlayer';
+import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay, mockProfileData, mockCourseDetailData, mockUpdatePlayProgressResponse, updatePlayProgress as mockUpdatePlayProgress } from './mock';
 import { API_BASE_URL, API_PATH_PREFIX } from './environment';
 
 // 获取首页数据
@@ -117,6 +118,60 @@ export async function fetchProfile(): Promise<ProfileResponse> {
   // 接口返回格式为 {code, desc, data}
   if (result.code !== 0) {
     throw new Error(result.des || '获取个人中心数据失败');
+  }
+
+  return result;
+}
+
+// 获取课程详情
+export async function fetchCourseDetail(courseId: string): Promise<CourseDetailResponse> {
+  if (USE_MOCK) {
+    return mockDelay(mockCourseDetailData);
+  }
+
+  const response = await fetch(`${API_BASE_URL}${API_PATH_PREFIX}/course?id=${courseId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('获取课程详情失败');
+  }
+
+  const result = await response.json();
+
+  // 接口返回格式为 {code, desc, data}
+  if (result.code !== 0) {
+    throw new Error(result.desc || '获取课程详情失败');
+  }
+
+  return result;
+}
+
+// 更新播放进度
+export async function updatePlayProgress(request: UpdatePlayProgressRequest): Promise<UpdatePlayProgressResponse> {
+  if (USE_MOCK) {
+    return mockDelay(mockUpdatePlayProgressResponse);
+  }
+
+  const response = await fetch(`${API_BASE_URL}${API_PATH_PREFIX}/course/play-progress`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!response.ok) {
+    throw new Error('更新播放进度失败');
+  }
+
+  const result = await response.json();
+
+  // 接口返回格式为 {code, desc, data}
+  if (result.code !== 0) {
+    throw new Error(result.desc || '更新播放进度失败');
   }
 
   return result;

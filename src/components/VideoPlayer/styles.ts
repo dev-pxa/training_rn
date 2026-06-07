@@ -65,18 +65,14 @@ export const styles = StyleSheet.create({
     zIndex: 5,
   },
 
-  /** 中央播放按钮样式（渐变背景） */
+  /** 中央播放按钮样式（蒙版背景） */
   playBtn: {
     width: 72,
     height: 72,
     borderRadius: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#4F8EF7',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.4,
-    shadowRadius: 30,
-    elevation: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
 
   /** 暂停时透明覆盖层 */
