@@ -152,6 +152,16 @@ const CoursePlayerScreen: React.FC<CoursePlayerScreenProps> = ({ navigation, rou
 
   const handleCatalogItemPress = (item: Chapter) => {
     if (item.status === 'locked') return;
+
+    // 课程详情页只新增考试章节跳转：视频章节继续沿用原有播放切换逻辑。
+    if (item.type === 'test') {
+      navigation.navigate('Exam', {
+        courseId,
+        chapterId: item.id
+      });
+      return;
+    }
+
     if (item.id === playingItemId) return;
 
     // 切换章节前，先上报上一个章节的播放进度

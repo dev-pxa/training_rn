@@ -2,6 +2,7 @@ import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
 import { ProfileResponse } from '../types/profile';
 import { CourseDetailResponse, UpdatePlayProgressRequest, UpdatePlayProgressResponse } from '../types/coursePlayer';
+import { ExamResponse } from '../types/exam';
 
 // Mock 开关 - 设置为 false 可移除 mock
 export const USE_MOCK = false;
@@ -309,7 +310,7 @@ export const mockCourseDetailData: CourseDetailResponse = {
     id: 1,
     title: '2026款传感核心组件安装规范',
     desc: '本节重点：红外传感器的防死角部署与盲点规避。',
-    "currentChapterIndex": 0,
+    currentChapterIndex: 0,
     chapters: [
       {
         id: 1,
@@ -431,3 +432,105 @@ export async function updatePlayProgress(request: UpdatePlayProgressRequest): Pr
   console.log('updatePlayProgress:', request);
   return mockUpdatePlayProgressResponse;
 }
+
+export const mockExamData: ExamResponse = {
+  code: 0,
+  desc: '成功',
+  data: {
+    name: '智能家居方案顾问认证考试',
+    desc: '用于确认你已掌握全屋智能方案设计、设备安装规范、网关组网与售后处理流程。',
+    // 考前确认页展示内容：除顶部导航和底部按钮外，页面文案全部从该对象读取。
+    startPage: {
+      statusText: '认证考试 · 即将开始',
+      // 信息卡 value 也由接口直接返回，避免前端自行拼接“分钟/题”等业务文案。
+      summaryItems: [
+        {
+          type: 'duration',
+          label: '考试时间',
+          value: '30 分钟',
+        },
+        {
+          type: 'questionCount',
+          label: '题目数量',
+          value: '6 题',
+        },
+      ],
+      requirementTitle: '考试要求说明',
+      requirements: [
+        '请确认当前账号为本人使用，考试结果将同步到个人认证记录。',
+        '考试开始后不可暂停；倒计时结束时，系统将自动提交已作答内容。',
+        '认证考试已开启切屏监测，切屏 2 次将自动交卷。',
+        '请保持网络稳定，提交前可在题目列表中检查未完成题目。',
+      ],
+      notice: '开始前请关闭无关应用通知，确保接下来 30 分钟可以连续完成考试。',
+      confirmText: '点击“去开始”表示你已确认考试信息和相关要求。',
+    },
+    // 答题页顶部黄色警告条文案，由后端返回，方便不同考试配置不同监考规则。
+    warningText: '由于是认证考试，系统已开启切屏监测，切屏2次将自动交卷。',
+    status: 'not_started',
+    durationSeconds: 1800,
+    questionCount: 6,
+    remainingSeconds: 1800,
+    currentQuestionIndex: 0,
+    // 题目 mock 贴合当前课程“红外传感核心组件安装规范”，覆盖部署、避障、调试和交付场景。
+    questions: [
+      {
+        id: 1,
+        type: 1,
+        title: '红外传感核心组件安装前，应先确认现场$、设备$和安装$均符合施工规范。',
+        score: 10,
+        blankCount: 3,
+      },
+      {
+        id: 2,
+        type: 0,
+        title: '在狭长走廊部署红外传感器时，以下哪种做法最能减少探测死角？',
+        score: 5,
+        options: [
+          '将传感器安装在门后，避免影响墙面美观。',
+          '沿人员主要动线布点，并让探测扇区覆盖转角和入口区域。',
+          '只在走廊尽头安装一个传感器，减少设备数量。',
+          '把灵敏度调到最低，避免误触发。',
+        ],
+      },
+      {
+        id: 3,
+        type: 0,
+        title: '红外传感器靠近空调出风口或强热源安装，最可能带来什么问题？',
+        score: 5,
+        options: [
+          '设备外壳颜色会发生明显变化。',
+          '探测区域会自动扩大到两倍。',
+          '温度扰动可能造成误报或触发不稳定。',
+          '设备会无法接收任何网关信号。',
+        ],
+      },
+      {
+        id: 4,
+        type: 1,
+        title: '完成安装后，联动调试应依次核对$、平台$和告警$。',
+        score: 10,
+        blankCount: 3,
+      },
+      {
+        id: 5,
+        type: 0,
+        title: '发现红外传感器覆盖范围内存在柜体遮挡时，最合适的处理方式是？',
+        score: 5,
+        options: [
+          '保持原位置不变，在验收单中备注即可。',
+          '提高网关发射功率，遮挡问题会自动消失。',
+          '调整安装位置或角度，并重新进行动线触发测试。',
+          '关闭该传感器的告警联动，避免后续误报。',
+        ],
+      },
+      {
+        id: 6,
+        type: 1,
+        title: '交付前应保存安装$、测试$和客户$，作为后续运维追溯依据。',
+        score: 10,
+        blankCount: 3,
+      },
+    ],
+  },
+};

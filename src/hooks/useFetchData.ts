@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 interface UseFetchDataReturn<T> {
   data: T | null;
   loading: boolean;
   error: string | null;
-  fetchData: (api: () => Promise<{ code: number; des?: string; data: T }>) => Promise<void>;
+  fetchData: (api: () => Promise<{ code: number; desc?: string; data: T }>) => Promise<void>;
   setData: React.Dispatch<React.SetStateAction<T | null>>;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   refresh: () => void;
@@ -14,10 +14,10 @@ export function useFetchData<T>(): UseFetchDataReturn<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const apiRef = useRef<() => Promise<{ code: number; des?: string; data: T }> | null>(null);
+  const apiRef = useRef<() => Promise<{ code: number; desc?: string; data: T }> | null>(null);
 
   const fetchData = useCallback(
-    async (api: () => Promise<{ code: number; des?: string; data: T }>) => {
+    async (api: () => Promise<{ code: number; desc?: string; data: T }>) => {
       apiRef.current = api;
       try {
         setLoading(true);
@@ -27,9 +27,9 @@ export function useFetchData<T>(): UseFetchDataReturn<T> {
         if (response.code === 0) {
           setData(response.data);
         } else {
-          setError(response.des || '获取数据失败');
+          setError(response.desc || '获取数据失败');
         }
-      } catch (err) {
+      } catch {
         setError('网络请求失败');
       } finally {
         setLoading(false);
@@ -40,7 +40,7 @@ export function useFetchData<T>(): UseFetchDataReturn<T> {
 
   const refresh = useCallback(() => {
     if (apiRef.current) {
-      fetchData(apiRef.current as () => Promise<{ code: number; des?: string; data: T }>);
+      fetchData(apiRef.current as () => Promise<{ code: number; desc?: string; data: T }>);
     }
   }, [fetchData]);
 
