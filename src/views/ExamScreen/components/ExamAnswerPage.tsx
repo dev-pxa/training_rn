@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { LayoutChangeEvent, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, LayoutChangeEvent, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ExamDetail, ExamQuestion } from '../../../types/exam';
 import Icon from '../../../components/Icons/Icon';
@@ -20,6 +20,8 @@ interface ExamAnswerPageProps {
   remainingSeconds: number;
   canGoNext: boolean;
   isLastQuestion: boolean;
+  submitting: boolean;
+  submitError: string | null;
   choiceAnswers: Record<number, number>;
   fillAnswers: Record<number, string[]>;
   onSelectOption: (questionId: number, optionIndex: number) => void;
@@ -38,6 +40,8 @@ const ExamAnswerPage: React.FC<ExamAnswerPageProps> = ({
   remainingSeconds,
   canGoNext,
   isLastQuestion,
+  submitting,
+  submitError,
   choiceAnswers,
   fillAnswers,
   onSelectOption,
@@ -86,6 +90,12 @@ const ExamAnswerPage: React.FC<ExamAnswerPageProps> = ({
         <Text style={styles.warningText}>{data.warningText}</Text>
       </View>
 
+      {submitError ? (
+        <View style={styles.submitErrorBanner}>
+          <Text style={styles.submitErrorText}>{submitError}</Text>
+        </View>
+      ) : null}
+
       <ScrollView ref={scrollViewRef} style={styles.answerContent} showsVerticalScrollIndicator={false}>
         <View style={styles.questionMeta}>
           <LinearGradient
@@ -129,16 +139,16 @@ const ExamAnswerPage: React.FC<ExamAnswerPageProps> = ({
 
       <View style={styles.bottomBar}>
         <TouchableOpacity
-          style={[styles.secondaryButton, currentQuestionIndex === 0 && styles.disabledButton]}
+          style={[styles.secondaryButton, (currentQuestionIndex === 0 || submitting) && styles.disabledButton]}
           onPress={onPrevQuestion}
-          disabled={currentQuestionIndex === 0}
+          disabled={currentQuestionIndex === 0 || submitting}
         >
           <Text style={styles.secondaryButtonText}>上一题</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.primaryButtonWrap, !canGoNext && styles.disabledButton]}
+          style={[styles.primaryButtonWrap, (!canGoNext || submitting) && styles.disabledButton]}
           onPress={onNextQuestion}
-          disabled={!canGoNext}
+          disabled={!canGoNext || submitting}
         >
           <LinearGradient
             colors={['#4F8EF7', '#7C6EFC']}
@@ -146,8 +156,9 @@ const ExamAnswerPage: React.FC<ExamAnswerPageProps> = ({
             end={{ x: 1, y: 1 }}
             style={styles.primaryButton}
           >
+            {submitting ? <ActivityIndicator size="small" color="#FFFFFF" /> : null}
             <Text style={styles.primaryButtonText}>
-              {isLastQuestion ? '提交考试' : `确认进入第${currentQuestionIndex + 2}题`}
+              {submitting ? '提交中...' : isLastQuestion ? '提交考试' : `确认进入第${currentQuestionIndex + 2}题`}
             </Text>
           </LinearGradient>
         </TouchableOpacity>

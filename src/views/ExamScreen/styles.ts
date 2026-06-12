@@ -274,6 +274,23 @@ const styles = StyleSheet.create({
     color: '#B8860B',
     fontWeight: '500',
   },
+  submitErrorBanner: {
+    marginHorizontal: 16,
+    marginTop: -8,
+    marginBottom: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 90, 90, 0.18)',
+    backgroundColor: 'rgba(255, 90, 90, 0.08)',
+  },
+  submitErrorText: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#D84343',
+    fontWeight: '600',
+  },
   answerContent: {
     flex: 1,
     paddingHorizontal: 20,
@@ -548,6 +565,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
   },
   primaryButtonText: {
     fontSize: 15,

@@ -65,8 +65,6 @@ export interface ExamDetail {
   status: ExamStatus;
   /** 考试总时长秒数，用于点击“去开始”后初始化倒计时。 */
   durationSeconds: number;
-  /** 题目总数，用于答题页进度展示。 */
-  questionCount: number;
   /** 剩余秒数，用于后端返回进行中考试时继续倒计时。 */
   remainingSeconds: number;
   /** 后端返回进行中考试时要恢复到的题目下标。 */
@@ -83,4 +81,67 @@ export interface ExamResponse {
   des?: string;
   /** 考试详情数据。 */
   data: ExamDetail;
+}
+
+export type ExamSubmitAnswer =
+  | {
+      questionId: number;
+      type: 0;
+      optionIndex: number;
+    }
+  | {
+      questionId: number;
+      type: 1;
+      values: string[];
+    };
+
+export interface ExamSubmitRequest {
+  chapterId: number;
+  durationSeconds: number;
+  remainingSeconds: number;
+  answers: ExamSubmitAnswer[];
+}
+
+export interface ExamSubmitResponse {
+  code: number;
+  desc: string;
+  data: {
+    examRecordId: string;
+  };
+}
+
+export interface ExamDataOverviewItem {
+  name: string;
+  value: string;
+}
+
+export interface ExamTypePerformance {
+  name: string;
+  correctCount: number;
+  totalCount: number;
+}
+
+export interface ExamTipInfo {
+  img: string;
+  title: string;
+  desc: string;
+}
+
+export interface ExamResult {
+  examRecordId: number;
+  examName: string;
+  passed: boolean;
+  score: number;
+  passScore: number;
+  resultStatusText: string;
+  resultDesc: string;
+  dataOverview: ExamDataOverviewItem[];
+  typePerformance: ExamTypePerformance[];
+  tipInfo: ExamTipInfo;
+}
+
+export interface ExamResultResponse {
+  code: number;
+  desc: string;
+  data: ExamResult;
 }

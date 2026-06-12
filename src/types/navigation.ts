@@ -9,6 +9,7 @@ export type RootStackParamList = {
   CourseList: { category?: CourseCategory } | undefined;
   CoursePlayer: { courseId?: string } | undefined;
   Exam: { courseId?: string; chapterId: number; name?: string } | undefined;
+  ExamResult: { examRecordId: string; courseId?: string; chapterId?: number; };
 };
 
 export type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -18,3 +19,4 @@ export type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackPar
 export type CourseListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CourseList'>;
 export type CoursePlayerScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CoursePlayer'>;
 export type ExamScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Exam'>;
+export type ExamResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ExamResult'>;

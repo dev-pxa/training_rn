@@ -3,8 +3,8 @@ import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login
 import { CourseListResponse } from '../types/courseList';
 import { ProfileResponse } from '../types/profile';
 import { CourseDetailResponse, UpdatePlayProgressRequest, UpdatePlayProgressResponse } from '../types/coursePlayer';
-import { ExamResponse } from '../types/exam';
-import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay, mockProfileData, mockCourseDetailData, mockUpdatePlayProgressResponse, mockExamData } from './mock';
+import { ExamResponse, ExamResultResponse, ExamSubmitRequest, ExamSubmitResponse } from '../types/exam';
+import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay, mockProfileData, mockCourseDetailData, mockUpdatePlayProgressResponse, mockExamData, mockFetchExamResult, mockSubmitExam } from './mock';
 import { API_BASE_URL, API_PATH_PREFIX } from './environment';
 
 const USE_EXAM_MOCK = false;
@@ -205,6 +205,61 @@ export async function fetchExamDetail(courseId: string, chapterId: number): Prom
 
   if (result.code !== 0) {
     throw new Error(result.desc || result.des || '获取考试信息失败');
+  }
+
+  return result;
+}
+
+// 提交考试
+export async function submitExam(request: ExamSubmitRequest): Promise<ExamSubmitResponse> {
+  if (USE_EXAM_MOCK) {
+    return mockSubmitExam(request);
+  }
+
+  const response = await fetch(`${API_BASE_URL}${API_PATH_PREFIX}/examSubmit`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!response.ok) {
+    throw new Error('提交考试失败');
+  }
+
+  const result = await response.json();
+
+  if (result.code !== 0) {
+    throw new Error(result.desc || result.des || '提交考试失败');
+  }
+
+  return result;
+}
+
+// 获取考试结果
+export async function fetchExamResult(examRecordId: number): Promise<ExamResultResponse> {
+  if (USE_EXAM_MOCK) {
+    return mockFetchExamResult(examRecordId);
+  }
+
+  const url = new URL(`${API_BASE_URL}${API_PATH_PREFIX}/examResult`);
+  url.searchParams.append('examRecordId', String(examRecordId));
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('获取考试结果失败');
+  }
+
+  const result = await response.json();
+
+  if (result.code !== 0) {
+    throw new Error(result.desc || result.des || '获取考试结果失败');
   }
 
   return result;

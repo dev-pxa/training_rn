@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   StatusBar,
@@ -9,8 +9,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../types/navigation';
-import { ExamDetail } from '../../types/exam';
-import { fetchExamDetail } from '../../services/api';
+import { ExamDetail, ExamSubmitAnswer } from '../../types/exam';
+import { fetchExamDetail, submitExam } from '../../services/api';
 import { useFetchData } from '../../hooks/useFetchData';
 import ErrorState from '../../components/ErrorState';
 import ExamAnswerPage from './components/ExamAnswerPage';
@@ -37,6 +37,10 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const [choiceAnswers, setChoiceAnswers] = useState<Record<number, number>>({});
   const [fillAnswers, setFillAnswers] = useState<Record<number, string[]>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const hasSubmittedRef = useRef(false);
+  const timerSubmitAttemptedRef = useRef(false);
 
   /** 页面进入只请求一次考试接口；接口返回开始页文案、考试状态和全部题目。 */
   useEffect(() => {
@@ -57,7 +61,7 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
 
   const isAnswering = !!data && (hasStarted || data.status === 'in_progress');
 
-  /** 答题中才启动本地倒计时；倒计时结束后的自动交卷后续可接真实提交接口。 */
+  /** 答题中才启动本地倒计时；倒计时结束后复用提交接口自动交卷。 */
   useEffect(() => {
     if (!isAnswering || remainingSeconds <= 0) return;
 
@@ -69,7 +73,7 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
   }, [isAnswering, remainingSeconds]);
 
   const questions = data?.questions || [];
-  const questionCount = data?.questionCount || questions.length;
+  const questionCount = questions.length;
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex >= questions.length - 1;
 
@@ -82,7 +86,7 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
     }
 
     const answers = fillAnswers[currentQuestion.id] || [];
-    return answers.length === currentQuestion.blankCount && answers.every(answer => answer.trim().length > 0);
+    return answers.length === currentQuestion.blankCount && answers.every(answer => answer?.trim()?.length > 0);
   }, [choiceAnswers, currentQuestion, fillAnswers]);
 
   /** 点击“去开始”只切换本地状态，不再请求接口，符合单接口返回全部数据的约束。 */
@@ -96,6 +100,7 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
 
   /** 选择题答案按 questionId 存储，避免翻题后丢失已选状态。 */
   const handleSelectOption = (questionId: number, optionIndex: number) => {
+    setSubmitError(null);
     setChoiceAnswers(prev => ({
       ...prev,
       [questionId]: optionIndex,
@@ -104,6 +109,7 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
 
   /** 填空题答案按 questionId + blankIndex 存储，和接口 blankCount 的空位顺序保持一致。 */
   const handleFillAnswerChange = (questionId: number, blankIndex: number, value: string) => {
+    setSubmitError(null);
     setFillAnswers(prev => {
       const current = [...(prev[questionId] || [])];
       current[blankIndex] = value;
@@ -118,13 +124,74 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
     setCurrentQuestionIndex(prev => Math.max(prev - 1, 0));
   };
 
-  /** 最后一题目前只保留提交占位行为；真实判分/提交接口不在当前需求范围内。 */
+  const buildSubmitAnswers = useCallback((): ExamSubmitAnswer[] => {
+    return questions.reduce<ExamSubmitAnswer[]>((answers, question) => {
+      if (question.type === 0) {
+        const optionIndex = choiceAnswers[question.id];
+        if (optionIndex !== undefined) {
+          answers.push({
+            questionId: question.id,
+            type: 0,
+            optionIndex,
+          });
+        }
+        return answers;
+      }
+
+      const currentValues = fillAnswers[question.id] || [];
+      const values = Array.from({ length: question.blankCount }, (_, index) => (currentValues[index] || '').trim());
+      if (values.some(value => value.length > 0)) {
+        answers.push({
+          questionId: question.id,
+          type: 1,
+          values,
+        });
+      }
+      return answers;
+    }, []);
+  }, [choiceAnswers, fillAnswers, questions]);
+
+  const handleSubmitExam = useCallback(async () => {
+    if (!data || submitting || hasSubmittedRef.current) return;
+
+    hasSubmittedRef.current = true;
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await submitExam({
+        chapterId,
+        durationSeconds: data.durationSeconds,
+        remainingSeconds,
+        answers: buildSubmitAnswers(),
+      });
+
+      navigation.replace('ExamResult', {
+        examRecordId: response.data.examRecordId,
+        courseId,
+        chapterId,
+        name: data.name || fallbackName,
+      });
+    } catch {
+      hasSubmittedRef.current = false;
+      setSubmitError('提交失败，请重试');
+    } finally {
+      setSubmitting(false);
+    }
+  }, [buildSubmitAnswers, chapterId, courseId, data, fallbackName, navigation, remainingSeconds, submitting]);
+
+  useEffect(() => {
+    if (!isAnswering || remainingSeconds !== 0 || hasSubmittedRef.current || timerSubmitAttemptedRef.current) return;
+    timerSubmitAttemptedRef.current = true;
+    handleSubmitExam();
+  }, [handleSubmitExam, isAnswering, remainingSeconds]);
+
+  /** 最后一题走提交接口，成功后跳转考试结果页。 */
   const handleNextQuestion = () => {
-    if (!canGoNext) return;
+    if (!canGoNext || submitting) return;
 
     if (isLastQuestion) {
-      console.log('提交考试', { choiceAnswers, fillAnswers });
-      navigation.goBack();
+      handleSubmitExam();
       return;
     }
 
@@ -169,6 +236,8 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
           remainingSeconds={remainingSeconds}
           canGoNext={canGoNext}
           isLastQuestion={isLastQuestion}
+          submitting={submitting}
+          submitError={submitError}
           choiceAnswers={choiceAnswers}
           fillAnswers={fillAnswers}
           onSelectOption={handleSelectOption}

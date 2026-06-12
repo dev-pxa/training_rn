@@ -2,7 +2,7 @@ import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
 import { ProfileResponse } from '../types/profile';
 import { CourseDetailResponse, UpdatePlayProgressRequest, UpdatePlayProgressResponse } from '../types/coursePlayer';
-import { ExamResponse } from '../types/exam';
+import { ExamResponse, ExamResultResponse, ExamSubmitRequest, ExamSubmitResponse } from '../types/exam';
 
 // Mock 开关 - 设置为 false 可移除 mock
 export const USE_MOCK = false;
@@ -469,7 +469,6 @@ export const mockExamData: ExamResponse = {
     warningText: '由于是认证考试，系统已开启切屏监测，切屏2次将自动交卷。',
     status: 'not_started',
     durationSeconds: 1800,
-    questionCount: 6,
     remainingSeconds: 1800,
     currentQuestionIndex: 0,
     // 题目 mock 贴合当前课程“红外传感核心组件安装规范”，覆盖部署、避障、调试和交付场景。
@@ -534,3 +533,120 @@ export const mockExamData: ExamResponse = {
     ],
   },
 };
+
+export async function mockSubmitExam(request: ExamSubmitRequest): Promise<ExamSubmitResponse> {
+  await delay(MOCK_DELAY);
+
+  const answeredCount = request.answers.filter(answer => {
+    if (answer.type === 0) {
+      return answer.optionIndex >= 0;
+    }
+
+    return answer.values.length > 0 && answer.values.every(value => value.trim().length > 0);
+  }).length;
+  const isPassedRecord = answeredCount >= Math.ceil(mockExamData.data.questions.length * 0.8);
+
+  return {
+    code: 0,
+    desc: '提交成功',
+    data: {
+      examRecordId: isPassedRecord ? `exam_record_pass_${Date.now()}` : `exam_record_fail_${Date.now()}`,
+    },
+  };
+}
+
+const mockPassedExamResult: ExamResultResponse = {
+  code: 0,
+  desc: '查询成功',
+  data: {
+    examRecordId: 1,
+    examName: '智能家居方案顾问认证考试',
+    passed: true,
+    score: 86,
+    passScore: 70,
+    resultStatusText: '已通过认证',
+    resultDesc: '成绩已同步到你的个人认证记录。本次已达到方案顾问认证标准，可在客户项目中展示认证标识。',
+    dataOverview: [
+      {
+        name: '答对题目数',
+        value: '17/20',
+      },
+      {
+        name: '作答时长',
+        value: '26:18',
+      },
+      {
+        name: '正确率',
+        value: '85%',
+      },
+    ],
+    typePerformance: [
+      {
+        name: '单选题',
+        correctCount: 9,
+        totalCount: 10,
+      },
+      {
+        name: '填空题',
+        correctCount: 4,
+        totalCount: 5,
+      },
+    ],
+    tipInfo: {
+      img: '',
+      title: '认证记录已更新',
+      desc: '你可以在个人中心查看证书和认证记录。',
+    }
+  },
+};
+
+const mockFailedExamResult: ExamResultResponse = {
+  code: 0,
+  desc: '查询成功',
+  data: {
+    examRecordId: 2,
+    examName: '智能家居方案顾问认证考试',
+    passed: false,
+    score: 58,
+    passScore: 70,
+    resultStatusText: '未通过认证',
+    resultDesc: '本次未达到 70 分通过线，成绩已保存。建议先补齐网关组网、售后工单和多选判断后再重新考试。',
+    dataOverview: [
+      {
+        name: '答对题目数',
+        value: '11/20',
+      },
+      {
+        name: '作答时长',
+        value: '29:42',
+      },
+      {
+        name: '正确率',
+        value: '55%',
+      },
+    ],
+    typePerformance: [
+      {
+        name: '单选题',
+        correctCount: 6,
+        totalCount: 10,
+      },
+      {
+        name: '填空题',
+        correctCount: 3,
+        totalCount: 5,
+      },
+    ],
+    tipInfo: {
+      img: '',
+      title: '建议完成补强学习',
+      desc: '距离 70 分通过线还有提升空间，建议复习课程重点后再考。',
+    }
+  },
+};
+
+export async function mockFetchExamResult(examRecordId: number): Promise<ExamResultResponse> {
+  await delay(MOCK_DELAY);
+
+  return true ? mockFailedExamResult : mockPassedExamResult;
+}
