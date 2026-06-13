@@ -10,6 +10,7 @@ import CourseListScreen from '../views/CourseListScreen';
 import CoursePlayerScreen from '../views/CoursePlayerScreen';
 import ExamScreen from '../views/ExamScreen';
 import ExamResultScreen from '../views/ExamResultScreen';
+import CertificateDetailScreen from '../views/CertificateDetailScreen';
 import { isLoggedIn } from '../services/storage';
 import { RootStackParamList } from '../types/navigation';
 
@@ -34,6 +35,7 @@ function AppNavigator() {
         <Stack.Screen name="CoursePlayer" component={CoursePlayerScreen} />
         <Stack.Screen name="Exam" component={ExamScreen} />
         <Stack.Screen name="ExamResult" component={ExamResultScreen} />
+        <Stack.Screen name="CertificateDetail" component={CertificateDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

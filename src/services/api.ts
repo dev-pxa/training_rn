@@ -3,8 +3,8 @@ import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login
 import { CourseListResponse } from '../types/courseList';
 import { ProfileResponse } from '../types/profile';
 import { CourseDetailResponse, UpdatePlayProgressRequest, UpdatePlayProgressResponse } from '../types/coursePlayer';
-import { ExamResponse, ExamResultResponse, ExamSubmitRequest, ExamSubmitResponse } from '../types/exam';
-import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay, mockProfileData, mockCourseDetailData, mockUpdatePlayProgressResponse, mockExamData, mockFetchExamResult, mockSubmitExam } from './mock';
+import { CertificateDetailResponse, ExamResponse, ExamResultResponse, ExamSubmitRequest, ExamSubmitResponse } from '../types/exam';
+import { USE_MOCK, mockHomeData, mockLoginConfig, mockLogin, mockDelay, mockProfileData, mockCourseDetailData, mockUpdatePlayProgressResponse, mockExamData, mockFetchExamResult, mockSubmitExam, mockFetchCertificateDetail } from './mock';
 import { API_BASE_URL, API_PATH_PREFIX } from './environment';
 
 const USE_EXAM_MOCK = false;
@@ -260,6 +260,34 @@ export async function fetchExamResult(examRecordId: number): Promise<ExamResultR
 
   if (result.code !== 0) {
     throw new Error(result.desc || result.des || '获取考试结果失败');
+  }
+
+  return result;
+}
+
+// 获取证书详情
+export async function fetchCertificateDetail(certificateId: number): Promise<CertificateDetailResponse> {
+  if (USE_EXAM_MOCK) {
+    return mockFetchCertificateDetail(certificateId);
+  }
+
+  const url = new URL(`${API_BASE_URL}${API_PATH_PREFIX}/certificateDetail`);
+  url.searchParams.append('certificateId', String(certificateId));
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('获取证书详情失败');
+  }
+
+  const result = await response.json();
+
+  if (result.code !== 0) {
+    throw new Error(result.desc || result.des || '获取证书详情失败');
   }
 
   return result;

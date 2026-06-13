@@ -2,7 +2,7 @@ import { HomeResponse } from '../types/home';
 import { LoginConfigResponse, LoginRequest, LoginResponse } from '../types/login';
 import { ProfileResponse } from '../types/profile';
 import { CourseDetailResponse, UpdatePlayProgressRequest, UpdatePlayProgressResponse } from '../types/coursePlayer';
-import { ExamResponse, ExamResultResponse, ExamSubmitRequest, ExamSubmitResponse } from '../types/exam';
+import { CertificateDetailResponse, ExamResponse, ExamResultResponse, ExamSubmitRequest, ExamSubmitResponse } from '../types/exam';
 
 // Mock 开关 - 设置为 false 可移除 mock
 export const USE_MOCK = false;
@@ -562,6 +562,7 @@ const mockPassedExamResult: ExamResultResponse = {
     examRecordId: 1,
     examName: '智能家居方案顾问认证考试',
     passed: true,
+    certificateId: 99,
     score: 86,
     passScore: 70,
     resultStatusText: '已通过认证',
@@ -649,4 +650,53 @@ export async function mockFetchExamResult(examRecordId: number): Promise<ExamRes
   await delay(MOCK_DELAY);
 
   return true ? mockFailedExamResult : mockPassedExamResult;
+}
+
+export async function mockFetchCertificateDetail(certificateId: number): Promise<CertificateDetailResponse> {
+  await delay(MOCK_DELAY);
+
+  return {
+    code: 0,
+    desc: '查询成功',
+    data: {
+      certificateId,
+      statusText: '已获得证书',
+      name: '智能家居安装与调试能力认证',
+      desc: '你已通过本次考试，证书可下载保存，并同步到个人培训档案。',
+      imageUrl: 'https://modao.cc/agent-py/media/generated_images/2026-03-08/03d7492f51664383a7f9fe8bb5904a46.jpg',
+      previewHint: '点击证书可查看大图',
+      infoSection: {
+        title: '证书信息',
+        rows: [
+          {
+            label: '获证人',
+            value: '张明',
+          },
+          {
+            label: '考试成绩',
+            value: '86 分',
+          },
+          {
+            label: '通过时间',
+            value: '2026.05.28 17:42',
+          },
+          {
+            label: '证书编号',
+            value: 'QXT-SH-20260528-0086',
+          },
+          {
+            label: '发证机构',
+            value: '企训通培训中心',
+          },
+        ],
+      },
+      nodeInfo: {
+        noteTitle: '使用说明',
+        notes: [
+          '证书可用于企业内部培训记录、岗位能力证明与项目服务资质展示。',
+          '如证书信息有误，请联系培训管理员核对后重新生成。',
+        ],
+      },
+    },
+  };
 }

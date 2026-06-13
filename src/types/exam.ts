@@ -131,6 +131,7 @@ export interface ExamResult {
   examRecordId: number;
   examName: string;
   passed: boolean;
+  certificateId?: number;
   score: number;
   passScore: number;
   resultStatusText: string;
@@ -144,4 +145,37 @@ export interface ExamResultResponse {
   code: number;
   desc: string;
   data: ExamResult;
+}
+
+export interface CertificateInfoRow {
+  label: string;
+  value: string;
+}
+
+export interface CertificateInfoSection {
+  title: string;
+  rows: CertificateInfoRow[];
+}
+
+export interface CertificateNodeInfo {
+  noteTitle: string;
+  notes: string[];
+}
+
+export interface CertificateDetail {
+  certificateId: number;
+  statusText: string;
+  name: string;
+  desc: string;
+  imageUrl: string;
+  previewHint: string;
+  infoSection: CertificateInfoSection;
+  nodeInfo: CertificateNodeInfo;
+}
+
+export interface CertificateDetailResponse {
+  code: number;
+  desc?: string;
+  des?: string;
+  data: CertificateDetail;
 }

@@ -137,7 +137,19 @@ const ExamResultScreen: React.FC<ExamResultScreenProps> = ({ navigation, route }
           <Text style={styles.resultTitle}>{data.examName}</Text>
           <Text style={styles.resultDesc}>{data.resultDesc}</Text>
           {data.passed ? (
-            <TouchableOpacity style={styles.heroAction} onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity
+              style={styles.heroAction}
+              onPress={() => {
+                if (data.certificateId === undefined) {
+                  Alert.alert('提示', '证书信息暂未生成，请稍后再试');
+                  return;
+                }
+
+                navigation.navigate('CertificateDetail', {
+                  certificateId: data.certificateId,
+                });
+              }}
+            >
               <Icon name="Medal" color="#FFFFFF" size={18} />
               <Text style={styles.heroActionText}>查看证书</Text>
             </TouchableOpacity>
