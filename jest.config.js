@@ -1,6 +1,7 @@
 module.exports = {
   preset: '@react-native/jest-preset',
   moduleNameMapper: {
+    '^@react-native-async-storage/async-storage$': '<rootDir>/__mocks__/@react-native-async-storage/async-storage.js',
     '^react-native-network-logger$': '<rootDir>/__mocks__/react-native-network-logger.js',
     '^react-native-orientation-locker$': '<rootDir>/__mocks__/react-native-orientation-locker.js',
   },

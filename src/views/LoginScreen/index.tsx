@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { fetchLoginConfig, login } from '../../services/api';
-import { saveAuthData } from '../../services/storage';
+import { useAuth } from '../../contexts/AuthContext';
 import { Company, Agreement } from '../../types/login';
 import { RootStackParamList } from '../../types/navigation';
 import AgreementModal from '../../components/AgreementModal';
@@ -32,6 +32,7 @@ interface LoginScreenProps {
 
 function LoginScreen({ navigation }: LoginScreenProps) {
   const insets = useSafeAreaInsets();
+  const { signIn } = useAuth();
   const [loading, setLoading] = useState(true);
   const [loggingIn, setLoggingIn] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -56,7 +57,7 @@ function LoginScreen({ navigation }: LoginScreenProps) {
       if (config.data.companies.length > 0) {
         setSelectedCompany(config.data.companies[0]);
       }
-    } catch (error) {
+    } catch {
       Alert.alert('错误', '获取登录配置失败，请重试');
     } finally {
       setLoading(false);
@@ -88,10 +89,17 @@ function LoginScreen({ navigation }: LoginScreenProps) {
         username: username.trim(),
         password: password.trim(),
       });
-      saveAuthData(response);
-      navigation.replace('Home');
+
+      /**
+       * 登录成功后交给 AuthContext 处理。
+       *
+       * login() 会把后端响应统一整理成 { token, user }。
+       * signIn 内部会先把 token/user 写入 AsyncStorage，再更新全局登录态。
+       * 如果本地保存失败，这里会进入 catch，不会误切到首页。
+       */
+      await signIn(response);
     } catch (error) {
-      Alert.alert('登录失败', '请检查用户名和密码');
+      Alert.alert('登录失败', error instanceof Error ? error.message : '请检查用户名和密码');
     } finally {
       setLoggingIn(false);
     }

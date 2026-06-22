@@ -70,11 +70,13 @@ export interface LoginResponse {
   /** 用户信息 */
   user: {
     /** 用户ID */
-    id: string;
+    id: number;
     /** 用户名 */
     username: string;
     /** 姓名 */
     name: string;
+    /** 手机号 */
+    phone?: string;
     /** 头像 */
     avatar?: string;
     /** 企业代码 */
@@ -83,3 +85,6 @@ export interface LoginResponse {
     companyName: string;
   };
 }
+
+/** 登录接口通用包装响应 */
+export interface LoginApiResponse extends ApiResponse<LoginResponse> {}

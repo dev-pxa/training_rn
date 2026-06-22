@@ -192,9 +192,10 @@ export function mockLogin(request: LoginRequest): LoginResponse {
   return {
     token: 'mock_token_' + Date.now(),
     user: {
-      id: 'user_001',
+      id: 111,
       username: request.username,
       name: request.username === 'admin' ? '管理员' : '学员' + request.username,
+      phone: request.username,
       avatar: undefined,
       companyCode: request.companyCode,
       companyName: mockLoginConfig.data.companies.find((c) => c.code === request.companyCode)?.name || request.companyCode,

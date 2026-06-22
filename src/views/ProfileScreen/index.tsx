@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,6 +18,7 @@ import ErrorState from '../../components/ErrorState';
 import { RootStackParamList } from '../../types/navigation';
 import { Icon } from '../../components/Icons';
 import { fetchProfile } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import { useFetchData } from '../../hooks/useFetchData';
 import { ProfileResponse, RecentLearningItem, StatsItem } from '../../types/profile';
 import styles from './styles';
@@ -38,8 +40,9 @@ const PROFILE_TABS: TabItem[] = [
 ];
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
+  const { signOut } = useAuth();
   /** 当前激活的 Tab */
-  const [activeTab, setActiveTab] = useState('profile');
+  const [_activeTab, setActiveTab] = useState('profile');
 
   /** 获取个人中心数据 */
   const { data: profileData, loading, error, fetchData } = useFetchData<ProfileResponse['data']>();
@@ -61,6 +64,24 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   /** 点击课程处理 */
   const handleCoursePress = (jumpUrl: string) => {
     console.log('跳转课程:', jumpUrl);
+  };
+
+  /** 退出登录处理 */
+  const handleLogout = () => {
+    /**
+     * 退出登录属于破坏当前会话的操作，先弹确认，避免用户误触。
+     * 真正的路由切换不在这里手写，signOut 清掉登录态后导航层会自动切回未登录栈。
+     */
+    Alert.alert('退出登录', '确定要退出当前账号吗？', [
+      { text: '取消', style: 'cancel' },
+      {
+        text: '退出',
+        style: 'destructive',
+        onPress: async () => {
+          await signOut();
+        },
+      },
+    ]);
   };
 
   /** 渲染统计项 */
@@ -190,7 +211,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         </View>
 
         {/* 登出按钮 */}
-        <TouchableOpacity style={styles.logoutButton} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.logoutButton} activeOpacity={0.7} onPress={handleLogout}>
           <Text style={styles.logoutText}>退出当前企业账号</Text>
         </TouchableOpacity>
 
