@@ -69,13 +69,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          {
+            echo "Commit: ${GITHUB_SHA}"
+            echo
+            echo "APK: ${{ steps.apk.outputs.apk_name }}"
+            echo
+            echo "This release was generated automatically from the master branch."
+          } > dist/release-notes.md
+
           gh release create "${{ steps.apk.outputs.release_tag }}" \
             "dist/${{ steps.apk.outputs.apk_name }}" \
             --target "${GITHUB_SHA}" \
             --title "Android APK v${{ steps.apk.outputs.app_version }} #${GITHUB_RUN_NUMBER}" \
-            --notes "Commit: ${GITHUB_SHA}
-
-APK: ${{ steps.apk.outputs.apk_name }}
-
-This release was generated automatically from the master branch." \
+            --notes-file dist/release-notes.md \
             --prerelease
