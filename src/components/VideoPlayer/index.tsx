@@ -6,7 +6,7 @@
 
  */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, Modal } from 'react-native';
+import { GestureResponderEvent, LayoutChangeEvent, View, Text, TouchableOpacity, StatusBar, Modal } from 'react-native';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation-locker';
 import LinearGradient from 'react-native-linear-gradient';
@@ -117,6 +117,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   /** 自动隐藏控制栏的定时器引用 - 用于清除之前的定时器，避免多个定时器同时运行 */
   const hideControlsTimer = useRef<ReturnType<typeof setTimeout>>(null);
+
+  /**
+   * 进度条可点击区域宽度。
+   *
+   * React Native 的 press 事件只会告诉我们点击点相对组件左上角的 locationX，
+   * 不会提供 layoutWidth。之前直接从 nativeEvent.layoutWidth 取值会得到 undefined，
+   * 导致点击比例变成 NaN，最终 seek(NaN) 失败。
+   */
+  const [progressTrackWidth, setProgressTrackWidth] = useState(0);
 
   // ========== 定时器管理 ==========
 
@@ -390,7 +399,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
    * 非全屏状态下：调用 onBackPress 返回上一页
    */
   const handleBackPress = useCallback((event: any) => {
-    // 阻止事件冒泡，避免触发射击视频区域的逻辑
+    // 阻止事件冒泡，避免触发视频区域点击逻辑
     // 重要：如果不阻止冒泡，点击返回按钮时也会触发 handleVideoPress
     event?.stopPropagation?.();
 
@@ -466,18 +475,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
    * 4. 更新当前时间状态
    * @param event - 点击事件，包含位置信息
    */
-  const handleProgressPress = useCallback((event: any) => {
-    // 阻止事件冒泡，避免触发射击视频区域的逻辑
+  const handleProgressPress = useCallback((event: GestureResponderEvent) => {
+    // 阻止事件冒泡，避免触发视频区域点击逻辑
     event?.stopPropagation?.();
-    // 如果视频总时长还未加载完成，不处理
-    if (duration <= 0) return;
+    // 如果视频总时长或进度条宽度还未加载完成，不处理
+    if (duration <= 0 || progressTrackWidth <= 0) return;
 
     // 从原生事件中获取点击信息
     const { nativeEvent } = event;
     // 获取点击位置距离进度条左侧的距离
-    const { layoutX, layoutWidth } = nativeEvent;
+    const { locationX } = nativeEvent;
     // 计算点击位置占进度条总宽度的比例
-    const percentage = layoutX / layoutWidth;
+    const percentage = Math.min(Math.max(locationX / progressTrackWidth, 0), 1);
     // 根据比例计算对应的播放时间
     const newTime = percentage * duration;
 
@@ -487,9 +496,23 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     setCurrentTime(newTime);
     // 保存新的播放时间到 ref 中，用于全屏切换时恢复
     savedTimeRef.current = newTime;
+    // 主动同步给父组件，避免进度上报 ref 等到下一次 onProgress 才更新。
+    onProgressChange?.(newTime);
+    // 如果视频已经播完，点击进度条应恢复到可播放状态。
+    setIsEnded(false);
     // 重置自动隐藏定时器
     resetHideControlsTimer();
-  }, [duration, resetHideControlsTimer]);
+  }, [duration, onProgressChange, progressTrackWidth, resetHideControlsTimer]);
+
+  /**
+   * 记录进度条点击热区宽度。
+   *
+   * 进度条在普通/全屏模式下宽度不同，布局变化时都会触发 onLayout，
+   * 因此这里使用最新宽度计算点击比例。
+   */
+  const handleProgressTrackLayout = useCallback((event: LayoutChangeEvent) => {
+    setProgressTrackWidth(event.nativeEvent.layout.width);
+  }, []);
 
   // ========== 计算属性 ==========
 
@@ -556,20 +579,23 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
             {/* 可点击的进度条 */}
             <TouchableOpacity
-              style={styles.progressTrack}
+              style={styles.progressTrackTouchArea}
               onPress={handleProgressPress}
+              onLayout={handleProgressTrackLayout}
               activeOpacity={0.7}
             >
-              {/* 进度填充条（渐变）- 宽度根据播放进度动态计算 */}
-              <LinearGradient
-                colors={['#4F8EF7', '#7C6EFC']}
-                style={[styles.progressFill, { width: `${progressPercent}%` }]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-              />
-              {/* 进度点（可选的视觉标记）- 两个装饰点 */}
-              <View style={[styles.progressDot, { left: '25%' }]} />
-              <View style={[styles.progressDot, { left: '75%' }]} />
+              <View style={styles.progressTrack}>
+                {/* 进度填充条（渐变）- 宽度根据播放进度动态计算 */}
+                <LinearGradient
+                  colors={['#4F8EF7', '#7C6EFC']}
+                  style={[styles.progressFill, { width: `${progressPercent}%` }]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                />
+                {/* 进度点（可选的视觉标记）- 两个装饰点 */}
+                <View style={[styles.progressDot, { left: '25%' }]} />
+                <View style={[styles.progressDot, { left: '75%' }]} />
+              </View>
             </TouchableOpacity>
 
             {/* 视频总时长 */}

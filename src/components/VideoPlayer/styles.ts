@@ -126,9 +126,16 @@ export const styles = StyleSheet.create({
     minWidth: 40,
   },
 
+  /** 进度条点击热区 */
+  progressTrackTouchArea: {
+    flex: 1,
+    minHeight: 24,
+    justifyContent: 'center',
+  },
+
   /** 进度条轨道（背景） */
   progressTrack: {
-    flex: 1,
+    width: '100%',
     height: 4,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     borderRadius: 2,
