@@ -13,7 +13,7 @@ import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { RootStackParamList } from '../../types/navigation';
 import { Chapter, CourseDetail } from '../../types/coursePlayer';
-import Icon, { IconName } from '../../components/Icons/Icon';
+import Icon, { IconName } from '../../components/icons/Icon';
 import VideoPlayer from '../../components/VideoPlayer';
 import ErrorState from '../../components/ErrorState';
 import { fetchCourseDetail, updatePlayProgress } from '../../services/api';
@@ -219,6 +219,7 @@ const CoursePlayerScreen: React.FC<CoursePlayerScreenProps> = ({ navigation, rou
         <ErrorState
           message={error || '数据加载失败'}
           onRetry={() => fetchData(() => fetchCourseDetail(courseId))}
+          onOpenDebug={() => navigation.navigate('DeveloperDebug')}
           onGoHome={() => navigation.navigate('Home')}
         />
       </SafeAreaView>

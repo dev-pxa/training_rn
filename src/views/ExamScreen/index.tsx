@@ -217,6 +217,7 @@ const ExamScreen: React.FC<ExamScreenProps> = ({ navigation, route }) => {
         <ErrorState
           message={error || '考试信息加载失败'}
           onRetry={() => fetchData(() => fetchExamDetail(courseId, chapterId))}
+          onOpenDebug={() => navigation.navigate('DeveloperDebug')}
           onGoHome={() => navigation.navigate('Home')}
         />
       </SafeAreaView>

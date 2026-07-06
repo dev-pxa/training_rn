@@ -10,7 +10,7 @@ import { View, Text, TouchableOpacity, StatusBar, Modal } from 'react-native';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation-locker';
 import LinearGradient from 'react-native-linear-gradient';
-import { Icon } from '../Icons';
+import { Icon } from '../icons';
 import { styles } from './styles';
 
 /** 播放速率选项数组 - 定义播放器支持的所有播放速度 */

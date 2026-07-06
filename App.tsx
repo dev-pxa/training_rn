@@ -11,7 +11,7 @@ startNetworkLogging();
 function App() {
   return (
     /**
-     * AuthProvider 放在应用最外层。
+     * AuthProvider 放在导航外层。
      *
      * 这样导航、登录页、个人中心以及请求层的 401 回调都能共享同一份登录状态。
      * Provider 会在启动时先恢复本地 token，再决定展示登录栈还是业务栈。

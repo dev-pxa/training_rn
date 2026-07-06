@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { ActivityIndicator, LayoutChangeEvent, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ExamDetail, ExamQuestion } from '../../../types/exam';
-import Icon from '../../../components/Icons/Icon';
+import Icon from '../../../components/icons/Icon';
 import styles from '../styles';
 import { formatClock, getQuestionTypeName } from '../utils';
 import ChoiceQuestion from './ChoiceQuestion';

@@ -6,6 +6,7 @@ import LoginScreen from '../views/LoginScreen';
 import RegisterScreen from '../views/RegisterScreen';
 import HomeScreen from '../views/HomeScreen';
 import ProfileScreen from '../views/ProfileScreen';
+import DeveloperDebugScreen from '../views/DeveloperDebugScreen';
 import CourseListScreen from '../views/CourseListScreen';
 import CoursePlayerScreen from '../views/CoursePlayerScreen';
 import ExamScreen from '../views/ExamScreen';
@@ -187,6 +188,12 @@ function AppNavigator() {
           <>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
+            {/*
+              开发者调试页放在已登录业务栈内：
+              1. 入口来自“我的”页面，符合内部调试入口的层级。
+              2. 环境切换可能影响当前 token 是否有效，因此保持和业务页同栈，便于保存后继续观察接口表现。
+            */}
+            <Stack.Screen name="DeveloperDebug" component={DeveloperDebugScreen} />
             <Stack.Screen name="CourseList" component={CourseListScreen} />
             <Stack.Screen name="CoursePlayer" component={CoursePlayerScreen} />
             <Stack.Screen name="Exam" component={ExamScreen} />

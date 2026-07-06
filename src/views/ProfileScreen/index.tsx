@@ -16,7 +16,7 @@ import { RouteProp } from '@react-navigation/native';
 import BottomTabBar, { TabItem } from '../../components/BottomTabBar';
 import ErrorState from '../../components/ErrorState';
 import { RootStackParamList } from '../../types/navigation';
-import { Icon } from '../../components/Icons';
+import { Icon } from '../../components/icons';
 import { fetchProfile } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFetchData } from '../../hooks/useFetchData';
@@ -140,6 +140,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         <ErrorState
           message={error || '数据加载失败'}
           onRetry={() => fetchData(fetchProfile)}
+          onOpenDebug={() => navigation.navigate('DeveloperDebug')}
         />
         {/* 底部导航栏 */}
       <BottomTabBar tabs={tabsWithHandlers} activeKey="profile" />
@@ -213,6 +214,18 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         {/* 登出按钮 */}
         <TouchableOpacity style={styles.logoutButton} activeOpacity={0.7} onPress={handleLogout}>
           <Text style={styles.logoutText}>退出当前企业账号</Text>
+        </TouchableOpacity>
+
+        {/*
+          内部联调入口放在退出账号按钮下方，符合原型和用户要求。
+          这里只负责导航，具体环境恢复、保存和兜底逻辑都收敛在 DeveloperDebugScreen/environment service。
+        */}
+        <TouchableOpacity
+          style={styles.developerDebugButton}
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate('DeveloperDebug')}
+        >
+          <Text style={styles.developerDebugText}>开发者调试</Text>
         </TouchableOpacity>
 
         {/* 底部安全间距 */}

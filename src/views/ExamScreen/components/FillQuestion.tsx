@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LayoutChangeEvent, Text, TextInput, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { FillExamQuestion } from '../../../types/exam';
-import Icon from '../../../components/Icons/Icon';
+import Icon from '../../../components/icons/Icon';
 import styles from '../styles';
 
 interface FillQuestionProps {

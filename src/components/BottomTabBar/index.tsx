@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
-import { Icon, IconName } from '../Icons';
+import { Icon, IconName } from '../icons';
 import styles from './styles';
 
 export interface TabItem {

@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Icon } from '../Icons';
+import { Icon } from '../icons';
 import { Agreement } from '../../types/login';
 import styles from './styles';
 

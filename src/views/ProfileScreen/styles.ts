@@ -208,11 +208,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEEFEF',
     borderRadius: 20,
     alignItems: 'center',
+    marginBottom: 12,
   },
   logoutText: {
     fontSize: 16,
     color: '#EF4444',
     fontWeight: '600',
+  },
+  developerDebugButton: {
+    // 开发者入口使用白底描边，和红色退出按钮区分，避免误触发退出登录。
+    width: '100%',
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E7E8EE',
+  },
+  developerDebugText: {
+    // 使用主品牌蓝色强调这是一个可进入的功能入口，而不是危险操作。
+    fontSize: 16,
+    color: '#4F8EF7',
+    fontWeight: '700',
   },
 });
 

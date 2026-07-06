@@ -1,4 +1,4 @@
-import { IconName } from '../../components/Icons/Icon';
+import { IconName } from '../../components/icons/Icon';
 import { ExamQuestion, ExamStartSummaryItem } from '../../types/exam';
 
 /** 选择题选项序号展示文本；页面目前最多展示 6 个选项，足够覆盖 mock 和常规单选题。 */

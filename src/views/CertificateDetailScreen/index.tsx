@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ErrorState from '../../components/ErrorState';
-import Icon from '../../components/Icons/Icon';
+import Icon from '../../components/icons/Icon';
 import { fetchCertificateDetail } from '../../services/api';
 import { downloadCertificateImage } from '../../services/certificateDownloader';
 import { useFetchData } from '../../hooks/useFetchData';
@@ -88,6 +88,7 @@ const CertificateDetailScreen: React.FC<CertificateDetailScreenProps> = ({ navig
         <ErrorState
           message={error || '证书详情加载失败'}
           onRetry={() => fetchData(() => fetchCertificateDetail(certificateId))}
+          onOpenDebug={() => navigation.navigate('DeveloperDebug')}
           onGoHome={() => navigation.navigate('Home')}
         />
       </SafeAreaView>

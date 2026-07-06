@@ -1,4 +1,4 @@
-import { FULL_API_BASE_URL } from './environment';
+import { getFullApiBaseUrl } from './environment';
 import { getToken } from './storage';
 
 /**
@@ -83,7 +83,7 @@ function normalizeHeaders(headers?: RequestInit['headers']): Record<string, stri
  * 统一请求入口。
  *
  * 这个函数集中处理四件事：
- * 1. 拼接 API 基础路径，避免各接口重复写 FULL_API_BASE_URL。
+ * 1. 拼接运行时 API 基础路径，避免各接口重复关心当前环境。
  * 2. 默认补 Content-Type，保持 JSON 请求一致。
  * 3. 需要鉴权时自动读取 token 并添加 Authorization。
  * 4. 统一识别 HTTP 401，并通知 AuthContext 清理登录态。
@@ -107,7 +107,14 @@ export async function request<T>(
     }
   }
 
-  const response = await fetch(`${FULL_API_BASE_URL}${path}`, {
+  /**
+   * API 域名不能再使用模块级常量。
+   *
+   * 开发者调试页会把环境选择写入 AsyncStorage；如果这里在模块加载时就固定住域名，
+   * 用户切换环境后必须重启 App 才可能生效。每次请求前动态读取，才能保证保存后新请求立即走新域名。
+   */
+  const fullApiBaseUrl = await getFullApiBaseUrl();
+  const response = await fetch(`${fullApiBaseUrl}${path}`, {
     ...options,
     headers,
   });

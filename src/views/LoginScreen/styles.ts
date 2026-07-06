@@ -12,8 +12,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    flex: 1,
     paddingHorizontal: 20,
+    paddingBottom: 32,
+  },
+  contentInner: {
+    // 表单内容不足一屏时自然占满屏幕；键盘弹起后由外层 ScrollView 负责滚动露出输入框。
+    flex: 1,
   },
   brandSection: {
     marginTop: 32,

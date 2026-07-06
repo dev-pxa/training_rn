@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ErrorState from '../../components/ErrorState';
-import Icon from '../../components/Icons/Icon';
+import Icon from '../../components/icons/Icon';
 import { fetchExamResult } from '../../services/api';
 import { useFetchData } from '../../hooks/useFetchData';
 import { CourseCategory } from '../../types/courseList';
@@ -92,6 +92,7 @@ const ExamResultScreen: React.FC<ExamResultScreenProps> = ({ navigation, route }
         <ErrorState
           message={error || '考试结果加载失败'}
           onRetry={() => fetchData(() => fetchExamResult(Number(examRecordId)))}
+          onOpenDebug={() => navigation.navigate('DeveloperDebug')}
           onGoHome={() => navigation.navigate('Home')}
         />
       </SafeAreaView>

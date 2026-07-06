@@ -1,5 +1,5 @@
 import { Linking, NativeModules, Platform } from 'react-native';
-import { API_BASE_URL } from './environment';
+import { getApiBaseUrl } from './environment';
 
 interface CertificateDownloaderNativeModule {
   downloadImage: (imageUrl: string, fileName: string) => Promise<number>;
@@ -7,7 +7,7 @@ interface CertificateDownloaderNativeModule {
 
 const CertificateDownloader = NativeModules.CertificateDownloader as CertificateDownloaderNativeModule | undefined;
 
-function normalizeImageUrl(imageUrl: string): string {
+async function normalizeImageUrl(imageUrl: string): Promise<string> {
   if (/^https?:\/\//i.test(imageUrl)) {
     return imageUrl;
   }
@@ -16,11 +16,18 @@ function normalizeImageUrl(imageUrl: string): string {
     return `https:${imageUrl}`;
   }
 
+  /**
+   * 证书接口可能返回相对路径，例如 /uploads/cert.jpg。
+   * 这类资源地址也必须跟随开发者调试页选择的环境，否则接口切到了测试环境，
+   * 图片下载仍可能去线上域名，导致联调结果不一致。
+   */
+  const apiBaseUrl = await getApiBaseUrl();
+
   if (imageUrl.startsWith('/')) {
-    return `${API_BASE_URL}${imageUrl}`;
+    return `${apiBaseUrl}${imageUrl}`;
   }
 
-  return `${API_BASE_URL}/${imageUrl}`;
+  return `${apiBaseUrl}/${imageUrl}`;
 }
 
 function getImageExtension(imageUrl: string): string {
@@ -39,7 +46,7 @@ export async function downloadCertificateImage(imageUrl: string, certificateId: 
     throw new Error('证书图片地址为空');
   }
 
-  const normalizedImageUrl = normalizeImageUrl(imageUrl);
+  const normalizedImageUrl = await normalizeImageUrl(imageUrl);
   const extension = getImageExtension(normalizedImageUrl);
   const fileName = `certificate_${certificateId}.${extension}`;
 

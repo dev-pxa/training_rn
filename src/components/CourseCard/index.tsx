@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Course, CourseType } from '../../types/home';
-import Icon from '../Icons/Icon';
+import Icon from '../icons/Icon';
 import styles from './styles';
 
 interface CourseCardProps {

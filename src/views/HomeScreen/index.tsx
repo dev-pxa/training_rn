@@ -113,6 +113,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <ErrorState
           message={error || '数据加载失败'}
           onRetry={() => fetchData(fetchHomeData)}
+          onOpenDebug={() => navigation.navigate('DeveloperDebug')}
         />
       </SafeAreaView>
     );

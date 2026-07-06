@@ -19,7 +19,7 @@ import { Course } from '../../types/home';
 import { CourseCategory, CategoryTab, CourseListResponse } from '../../types/courseList';
 import { fetchCourseList } from '../../services/api';
 import { useFetchData } from '../../hooks/useFetchData';
-import { Icon } from '../../components/Icons';
+import { Icon } from '../../components/icons';
 import styles from './styles';
 
 type CourseListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'CourseList'>;
@@ -135,6 +135,7 @@ const CourseListScreen: React.FC<CourseListScreenProps> = ({ navigation, route }
         <ErrorState
           message={error || '数据加载失败'}
           onRetry={() => fetchData(() => fetchCourseList(activeCategory))}
+          onOpenDebug={() => navigation.navigate('DeveloperDebug')}
           onGoHome={() => navigation.navigate('Home')}
         />
       </SafeAreaView>

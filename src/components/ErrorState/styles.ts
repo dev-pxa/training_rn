@@ -119,6 +119,25 @@ const styles = StyleSheet.create({
     borderColor: '#E7E8EE',
     gap: 8,
   },
+  debugButton: {
+    // 接口环境不可用时，错误页需要直接暴露调试入口，避免用户必须先回到“我的”页面。
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#D6E4FF',
+    gap: 8,
+  },
+  debugButtonText: {
+    // 使用主品牌蓝色，和“返回首页”的普通黑色按钮区分，强调这是环境修复入口。
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#4F8EF7',
+  },
   homeButtonText: {
     fontSize: 16,
     fontWeight: '600',

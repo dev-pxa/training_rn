@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ChoiceExamQuestion } from '../../../types/exam';
-import Icon from '../../../components/Icons/Icon';
+import Icon from '../../../components/icons/Icon';
 import styles from '../styles';
 import { OPTION_LETTERS } from '../utils';
 

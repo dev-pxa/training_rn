@@ -4,14 +4,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   Modal,
   FlatList,
   ActivityIndicator,
   Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { fetchLoginConfig, login } from '../../services/api';
@@ -19,7 +18,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Company, Agreement } from '../../types/login';
 import { RootStackParamList } from '../../types/navigation';
 import AgreementModal from '../../components/AgreementModal';
-import { Icon } from '../../components/Icons';
+import KeyboardAwareScreen from '../../components/KeyboardAwareScreen';
+import { Icon } from '../../components/icons';
 import styles from './styles';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -31,7 +31,6 @@ interface LoginScreenProps {
 }
 
 function LoginScreen({ navigation }: LoginScreenProps) {
-  const insets = useSafeAreaInsets();
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(true);
   const [loggingIn, setLoggingIn] = useState(false);
@@ -126,8 +125,8 @@ function LoginScreen({ navigation }: LoginScreenProps) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={[styles.content, { paddingTop: insets.top }]}>
+    <KeyboardAwareScreen style={styles.container} contentContainerStyle={styles.content}>
+      <View style={styles.contentInner}>
         {/* 品牌展示 */}
         <View style={styles.brandSection}>
           <LinearGradient
@@ -316,7 +315,7 @@ function LoginScreen({ navigation }: LoginScreenProps) {
           onAgree={handleAgree}
         />
       )}
-    </SafeAreaView>
+    </KeyboardAwareScreen>
   );
 }
 

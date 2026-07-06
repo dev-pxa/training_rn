@@ -6,6 +6,6 @@ module.exports = {
     '^react-native-orientation-locker$': '<rootDir>/__mocks__/react-native-orientation-locker.js',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|@react-navigation|react-native-linear-gradient|react-native-orientation-locker|react-native-safe-area-context|react-native-screens|react-native-video)/)',
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|@react-navigation|react-native-iphone-x-helper|react-native-keyboard-aware-scroll-view|react-native-linear-gradient|react-native-orientation-locker|react-native-safe-area-context|react-native-screens|react-native-video)/)',
   ],
 };
